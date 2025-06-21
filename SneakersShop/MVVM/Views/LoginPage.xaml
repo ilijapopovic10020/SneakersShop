@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.MVVM.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:viewmodel="clr-namespace:SneakersShop.MVVM.ViewModels"
+    x:DataType="viewmodel:LoginViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                      Dark={StaticResource Gray950}}"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False">
+
+    <ContentPage.BindingContext>
+        <viewmodel:LoginViewModel />
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout>
+        <BoxView
+            Margin="20"
+            BackgroundColor="Transparent"
+            HeightRequest="40"
+            WidthRequest="40" />
+        <Label
+            Margin="0,50,0,0"
+            FontAttributes="Bold"
+            FontSize="44"
+            HorizontalOptions="Center"
+            Text="Sneakers Shop"
+            TextTransform="Uppercase" />
+        <VerticalStackLayout
+            HorizontalOptions="Center"
+            Spacing="20"
+            VerticalOptions="Center">
+
+            <Label
+                Margin="0,150,0,0"
+                FontAttributes="Bold"
+                FontSize="44"
+                HorizontalTextAlignment="Center"
+                Text="Prijava" />
+            <VerticalStackLayout Spacing="20">
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Korisničko Ime"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding Username}" />
+                    <Label
+                        IsVisible="{Binding UsernameHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding UsernameError}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Lozinka"
+                        IsPassword="True"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding Password}">
+                        <material:TextField.Attachments>
+                            <material:TextFieldPasswordShowHideAttachment />
+                        </material:TextField.Attachments>
+                    </material:TextField>
+                    <Label
+                        IsVisible="{Binding PasswordHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding PasswordError}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout>
+                    <Button
+                        Command="{Binding LoginCommand}"
+                        FontAttributes="Bold"
+                        Style="{StaticResource PrimaryButton}"
+                        StyleClass="ElevatedButton"
+                        Text="Prijavi se" />
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                        <Label Text="Još nemate nalog?" VerticalOptions="Center" />
+                        <Button
+                            Padding="0"
+                            Clicked="Register_Button_Clicked"
+                            Style="{StaticResource TextButton}"
+                            Text="Registruj se" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

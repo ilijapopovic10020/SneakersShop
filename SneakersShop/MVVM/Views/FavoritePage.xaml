@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.MVVM.Views.FavoritePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:component="clr-namespace:SneakersShop.Components"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:model="clr-namespace:SneakersShop.MVVM.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.MVVM.ViewModels"
+    Title="FavoritePage"
+    x:DataType="viewmodel:FavoriteViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                      Dark={StaticResource Gray950}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}" RowDefinitions="auto, *">
+        <Border
+            Grid.Row="0"
+            BackgroundColor="{AppThemeBinding Light={StaticResource Gray100},
+                                              Dark={StaticResource Gray600}}"
+            StrokeShape="RoundRectangle 0,0,30,30"
+            StrokeThickness="0">
+            <VerticalStackLayout Margin="20" Spacing="15">
+                <!--  Pretraga  -->
+                <material:TextField
+                    x:Name="SearchField"
+                    AccentColor="Transparent"
+                    AllowClear="True"
+                    BorderThickness="0"
+                    Completed="SearchField_Completed"
+                    CornerRadius="20"
+                    Icon="search.svg"
+                    InputBackgroundColor="{StaticResource OffBlack}"
+                    Text="{Binding Keyword}"
+                    TextColor="White"
+                    VerticalOptions="Center">
+                    <material:TextField.Attachments>
+                        <Button
+                            Margin="0,0,5,0"
+                            Background="{StaticResource Primary}"
+                            Clicked="Search_Button_Clicked"
+                            CornerRadius="17"
+                            HeightRequest="34"
+                            StyleClass="ElevatedButton"
+                            Text="Pretraži"
+                            TextColor="White"
+                            WidthRequest="100" />
+                    </material:TextField.Attachments>
+                </material:TextField>
+                <Entry x:Name="DummyEntry" IsVisible="False" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!--  Text kada nisu pronadjeni zeljeni proizvodi  -->
+        <Label
+            Grid.Row="1"
+            FontAttributes="Bold"
+            FontSize="16"
+            HorizontalTextAlignment="Center"
+            IsVisible="{Binding HasProducts}"
+            Text="Nismo pronašli nijedan proizvod ili nema te omiljene proizvode."
+            TextColor="{StaticResource Gray400}"
+            TranslationY="-50"
+            VerticalOptions="Center" />
+
+        <!--  Indikator ucitavanja proizvoda  -->
+        <ActivityIndicator
+            Grid.Row="1"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center"
+            Color="{StaticResource Primary}" />
+
+        <!--  Proizvodi i paginacija  -->
+        <ScrollView
+            x:Name="FavoritesScrollView"
+            Grid.Row="1"
+            Padding="20"
+            IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+            Scrolled="FavoritesScrollView_Scrolled"
+            VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout>
+
+                <!--  Proizvodi  -->
+                <CollectionView ItemsSource="{Binding Favorites}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="15" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:ProductsModel">
+                            <component:ProductVerticalVariantComponent
+                                Name="{Binding Name}"
+                                AvgRating="{Binding AvgRating}"
+                                Brand="{Binding Brand}"
+                                CountReview="{Binding ReviewCount}"
+                                DiscountType="{Binding DiscountType}"
+                                DiscountValue="{Binding DiscountValue}"
+                                HasDiscount="{Binding HasDiscount}"
+                                HasDiscountType="{Binding HasDiscountType}"
+                                HasDiscountValue="{Binding HasDiscountValue}"
+                                Image="{Binding FullImageUrl}"
+                                NewPrice="{Binding NewPrice}"
+                                OldPrice="{Binding OldPrice}"
+                                ProductId="{Binding Id}"
+                                TextColor="{Binding TextColor}" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!--  Paginacija  -->
+                <HorizontalStackLayout
+                    Padding="20"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding IsPaginationVisible}"
+                    Spacing="10">
+                    <Border
+                        BackgroundColor="Black"
+                        HeightRequest="30"
+                        StrokeShape="RoundRectangle 15"
+                        StrokeThickness="0"
+                        WidthRequest="30">
+                        <Image Source="back.png" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding PreviousPageCommand}" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border
+                        HeightRequest="30"
+                        StrokeThickness="0"
+                        WidthRequest="30">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            HorizontalOptions="Center"
+                            Text="{Binding CurrentPage}"
+                            VerticalOptions="Center" />
+                    </Border>
+                    <Border
+                        BackgroundColor="Black"
+                        HeightRequest="30"
+                        StrokeShape="RoundRectangle 15"
+                        StrokeThickness="0"
+                        WidthRequest="30">
+                        <Image Source="forward.png" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NextPageCommand}" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!--  dugme za vracanje na vrh  -->
+        <Border
+            x:Name="GoToTopButton"
+            Grid.Row="1"
+            Margin="20,40"
+            BackgroundColor="{StaticResource Primary}"
+            HeightRequest="40"
+            HorizontalOptions="End"
+            IsVisible="{Binding IsScrolled}"
+            StrokeShape="RoundRectangle 20"
+            StrokeThickness="0"
+            VerticalOptions="End"
+            WidthRequest="40">
+            <ImageButton
+                Aspect="AspectFit"
+                Clicked="Go_To_Top_ImageButton_Clicked"
+                Rotation="90"
+                Source="back.png"
+                WidthRequest="34" />
+        </Border>
+    </Grid>
+</ContentPage>

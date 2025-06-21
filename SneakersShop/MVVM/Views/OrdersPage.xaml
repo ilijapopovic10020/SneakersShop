@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<uranium:UraniumContentPage
+    x:Class="SneakersShop.MVVM.Views.OrdersPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:model="clr-namespace:SneakersShop.MVVM.Models"
+    xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
+    xmlns:viewmodel="clr-namespace:SneakersShop.MVVM.ViewModels"
+    x:DataType="viewmodel:OrdersViewModel"
+    Shell.NavBarIsVisible="False">
+    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}" RowDefinitions="auto, *">
+        <HorizontalStackLayout Margin="20" VerticalOptions="Start">
+            <Border
+                Background="{StaticResource Gray100}"
+                HeightRequest="40"
+                HorizontalOptions="Start"
+                StrokeShape="RoundRectangle 20"
+                StrokeThickness="0"
+                WidthRequest="40">
+                <Image
+                    Aspect="AspectFit"
+                    HeightRequest="20"
+                    Source="back.svg"
+                    StyleClass="ElevatedButton"
+                    WidthRequest="20">
+                    <Image.Behaviors>
+                        <mct:IconTintColorBehavior TintColor="Black" />
+                    </Image.Behaviors>
+                </Image>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Back_TapGestureRecognizer_Tapped" />
+                </Border.GestureRecognizers>
+            </Border>
+            <Label
+                Margin="10,0"
+                FontAttributes="Bold"
+                FontSize="22"
+                Text="Moje Porudžbine"
+                VerticalOptions="Center" />
+        </HorizontalStackLayout>
+
+        <ActivityIndicator
+            Grid.Row="1"
+            IsRunning="{Binding Isloading}"
+            IsVisible="{Binding Isloading}"
+            VerticalOptions="Center"
+            Color="{StaticResource Primary}" />
+
+        <Button
+            Grid.Row="1"
+            Command="{Binding ToggleShowAllOrdersCommand}"
+            IsVisible="{Binding Isloading, Converter={StaticResource InverseBooleanConverter}}"
+            StyleClass="TextButton"
+            Text="{Binding ToggleButtonText}"
+            TextColor="{StaticResource Primary}"
+            VerticalOptions="Start" />
+
+        <ScrollView
+            Grid.Row="1"
+            Margin="0,50,0,20"
+            Padding="10"
+            IsVisible="{Binding Isloading, Converter={StaticResource InverseBooleanConverter}}"
+            VerticalOptions="Start"
+            VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout>
+                <CollectionView ItemsSource="{Binding FilteredOrders}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:OrderModel">
+                            <Border
+                                Margin="10,10,10,0"
+                                Padding="20"
+                                BackgroundColor="#f6f6f6"
+                                StrokeShape="RoundRectangle 20"
+                                StrokeThickness="0">
+                                <Grid RowDefinitions="auto, auto" RowSpacing="10">
+                                    <Grid RowDefinitions="auto, auto" RowSpacing="10">
+                                        <HorizontalStackLayout>
+                                            <Label Text="Ukupna cena: " TextColor="{StaticResource Gray400}" />
+                                            <Label Text="{Binding TotalPrice, StringFormat='{}{0:N2} RSD'}" TextColor="{StaticResource Primary}" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout HorizontalOptions="End">
+                                            <Label Text="{Binding OrderDate, StringFormat='{0:dd.MM.yyyy}'}" TextColor="{StaticResource Gray400}" />
+                                        </HorizontalStackLayout>
+                                        <Border
+                                            Grid.Row="1"
+                                            Padding="30,5"
+                                            BackgroundColor="{Binding StatusColor}"
+                                            HorizontalOptions="Start"
+                                            StrokeShape="RoundRectangle 20"
+                                            StrokeThickness="0">
+                                            <HorizontalStackLayout>
+                                                <Label Text="Status: " TextColor="{StaticResource Gray400}" />
+                                                <Label Text="{Binding OrderStatusDisplay}" TextColor="Black" />
+                                            </HorizontalStackLayout>
+                                        </Border>
+                                    </Grid>
+                                    <ScrollView
+                                        Grid.Row="1"
+                                        HorizontalScrollBarVisibility="Never"
+                                        Orientation="Horizontal">
+                                        <CollectionView ItemsSource="{Binding Items}">
+                                            <CollectionView.ItemsLayout>
+                                                <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                                            </CollectionView.ItemsLayout>
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate x:DataType="model:OrdersItemsModel">
+                                                    <Image
+                                                        HeightRequest="100"
+                                                        Source="{Binding FullImageUrl}"
+                                                        VerticalOptions="Center"
+                                                        WidthRequest="100" />
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                            <CollectionView.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding LoadOrderCommand, Source={RelativeSource AncestorType={x:Type viewmodel:OrdersViewModel}}}"
+                                                    CommandParameter="{Binding Id}"
+                                                    Tapped="TapGestureRecognizer_Tapped" />
+                                            </CollectionView.GestureRecognizers>
+                                        </CollectionView>
+                                    </ScrollView>
+                                </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding LoadOrderCommand, Source={RelativeSource AncestorType={x:Type viewmodel:OrdersViewModel}}}"
+                                        CommandParameter="{Binding Id}"
+                                        Tapped="TapGestureRecognizer_Tapped" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+
+    <uranium:UraniumContentPage.Attachments>
+        <material:BottomSheetView
+            x:Name="OrderDetails"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                              Dark={StaticResource Gray900}}"
+            MaximumHeightRequest="600">
+            <VerticalStackLayout
+                Padding="20"
+                x:DataType="viewmodel:OrdersViewModel"
+                BindingContext="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:OrdersViewModel}}}"
+                Spacing="16">
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="20"
+                    Text="Detalji porudžbine"
+                    TextColor="{StaticResource Primary}" />
+
+                <HorizontalStackLayout Spacing="5">
+                    <Label Text="Datum porudžbine:" TextColor="Gray" />
+                    <Label Text="{Binding Order.OrderDate, StringFormat='{0:dd.MM.yyyy}'}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="5">
+                    <Label Text="Procenjeno vreme dolaska:" TextColor="Gray" />
+                    <Label Text="{Binding Order.EstimatedArrival}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout IsVisible="{Binding IsReceivedDateVisible, Source={RelativeSource AncestorType={x:Type viewmodel:OrdersViewModel}}}" Spacing="5">
+                    <Label Text="Datum prijema:" TextColor="Gray" />
+                    <Label Text="{Binding Order.ReceivedDate, StringFormat='{0:dd.MM.yyyy}'}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="5">
+                    <Label Text="Ukupna cena:" TextColor="Gray" />
+                    <Label
+                        FontAttributes="Bold"
+                        Text="{Binding Order.TotalPrice}"
+                        TextColor="{StaticResource Primary}" />
+                </HorizontalStackLayout>
+
+                <Border
+                    Padding="30,5"
+                    BackgroundColor="{Binding Order.StatusColor}"
+                    HorizontalOptions="Start"
+                    StrokeShape="RoundRectangle 20"
+                    StrokeThickness="0">
+                    <HorizontalStackLayout>
+                        <Label Text="Status: " TextColor="Black" />
+                        <Label Text="{Binding Order.OrderStatusDisplay}" TextColor="Black" />
+                    </HorizontalStackLayout>
+                </Border>
+
+                <Label
+                    Margin="0,10,0,0"
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    Text="Artikli:" />
+
+                <!--  Ovo je KLJUČ: stavi CollectionView u Grid ili da mu daš visinu  -->
+                <CollectionView HeightRequest="300" ItemsSource="{Binding Order.Items}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:OrderItemModel">
+                            <Border
+                                Margin="0,5"
+                                Padding="10"
+                                BackgroundColor="#f6f6f6"
+                                StrokeShape="RoundRectangle 20"
+                                StrokeThickness="0">
+                                <HorizontalStackLayout Spacing="10">
+                                    <Image
+                                        Aspect="AspectFill"
+                                        HeightRequest="80"
+                                        Source="{Binding FullImageUrl}"
+                                        WidthRequest="80" />
+                                    <VerticalStackLayout>
+                                        <Label
+                                            FontAttributes="Bold"
+                                            Text="{Binding Name}"
+                                            TextColor="Black" />
+                                        <Label Text="{Binding Brand}" TextColor="Black" />
+                                        <HorizontalStackLayout>
+                                            <Label Text="Veličina: " TextColor="Gray" />
+                                            <Label Text="{Binding SizeNumber}" TextColor="Black" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout>
+                                            <Label Text="Količina: " TextColor="Gray" />
+                                            <Label Text="{Binding Quantity}" TextColor="Black" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout>
+                                            <Label
+                                                FontAttributes="Bold"
+                                                Text="Cena: "
+                                                TextColor="Black" />
+                                            <Label
+                                                FontAttributes="Bold"
+                                                Text="{Binding Price, StringFormat='{}{0:N2} RSD'}"
+                                                TextColor="{StaticResource Primary}" />
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </material:BottomSheetView>
+
+    </uranium:UraniumContentPage.Attachments>
+
+</uranium:UraniumContentPage>

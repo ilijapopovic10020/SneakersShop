@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<uranium:UraniumContentPage
+    x:Class="SneakersShop.MVVM.Views.ProductsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:component="clr-namespace:SneakersShop.Components"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:model="clr-namespace:SneakersShop.MVVM.Models"
+    xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
+    xmlns:viewmodel="clr-namespace:SneakersShop.MVVM.ViewModels"
+    x:DataType="viewmodel:ProductsViewModel"
+    Shell.NavBarIsVisible="False">
+    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}" RowDefinitions="auto, *">
+        <Border
+            Grid.Row="0"
+            BackgroundColor="{AppThemeBinding Light={StaticResource Gray100},
+                                              Dark={StaticResource Gray600}}"
+            StrokeShape="RoundRectangle 0,0,30,30"
+            StrokeThickness="0">
+            <VerticalStackLayout Margin="20" Spacing="15">
+
+                <!--  Search  -->
+                <material:TextField
+                    x:Name="SearchField"
+                    AccentColor="Transparent"
+                    AllowClear="True"
+                    BorderThickness="0"
+                    Completed="SearchField_Completed"
+                    CornerRadius="20"
+                    Icon="search.svg"
+                    InputBackgroundColor="{StaticResource OffBlack}"
+                    Text="{Binding Keyword}"
+                    TextColor="White"
+                    VerticalOptions="Center">
+                    <material:TextField.Attachments>
+                        <Button
+                            Margin="0,0,5,0"
+                            Background="{StaticResource Primary}"
+                            Clicked="Search_Button_Clicked"
+                            CornerRadius="17"
+                            HeightRequest="34"
+                            StyleClass="ElevatedButton"
+                            Text="Pretraži"
+                            TextColor="White"
+                            WidthRequest="105" />
+                    </material:TextField.Attachments>
+                </material:TextField>
+
+                <Entry x:Name="DummyEntry" IsVisible="False" />
+
+                <Grid
+                    x:Name="FilterGrid"
+                    IsVisible="{Binding IsFilterVisible}"
+                    RowDefinitions="auto, auto"
+                    RowSpacing="10">
+
+                    <!--  Filtering and sorting  -->
+                    <Grid Grid.Row="0">
+                        <!--  Sorting  -->
+                        <HorizontalStackLayout>
+                            <Image
+                                HeightRequest="24"
+                                Source="arrow_up_down.png"
+                                VerticalOptions="Center"
+                                WidthRequest="24">
+                                <Image.Behaviors>
+                                    <mct:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+                                </Image.Behaviors>
+                            </Image>
+                            <Label
+                                StyleClass="TextButton"
+                                Text="{Binding SelectedFilter.DisplayName}"
+                                TextColor="{StaticResource Primary}"
+                                VerticalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ShowSortingOptionsCommand}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </HorizontalStackLayout>
+
+                        <!--  Filtering  -->
+                        <Border
+                            Margin="0,0,10,0"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                                              Dark={StaticResource White}}"
+                            HeightRequest="34"
+                            HorizontalOptions="End"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="0"
+                            StyleClass="Elevation1"
+                            WidthRequest="54">
+                            <ImageButton
+                                CornerRadius="17"
+                                HeightRequest="20"
+                                HorizontalOptions="Center"
+                                Source="filter.svg"
+                                VerticalOptions="Center"
+                                WidthRequest="20">
+                                <ImageButton.Behaviors>
+                                    <mct:IconTintColorBehavior TintColor="{StaticResource Primary}" />
+                                </ImageButton.Behaviors>
+                                <ImageButton.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="Filter_TapGestureRecognizer_Tapped" />
+                                </ImageButton.GestureRecognizers>
+                            </ImageButton>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Filter_TapGestureRecognizer_Tapped" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+
+                    <!--  Categories  -->
+                    <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center">
+                        <CollectionView ItemsSource="{Binding Categories}">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:CategoryModel">
+                                    <Button
+                                        FontSize="16"
+                                        StyleClass="OutlinedButton"
+                                        Text="{Binding Name}"
+                                        TextColor="{AppThemeBinding Light={StaticResource Black},
+                                                                    Dark={StaticResource White}}" />
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </HorizontalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+
+        <!--  Products not found  -->
+        <Label
+            Grid.Row="1"
+            FontAttributes="Bold"
+            FontSize="16"
+            HorizontalOptions="Center"
+            IsVisible="{Binding HasProducts, Converter={StaticResource InverseBooleanConverter}}"
+            Text="Nismo pronašli nijedan proizvod."
+            TextColor="{StaticResource Gray400}"
+            TranslationY="-50"
+            VerticalOptions="Center" />
+
+        <!--  Indicatior for loading products  -->
+        <ActivityIndicator
+            Grid.Row="1"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center"
+            Color="{StaticResource Primary}" />
+
+        <!--  Products and pagination  -->
+        <ScrollView
+            x:Name="ProductsScrollView"
+            Grid.Row="1"
+            Padding="20"
+            IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+            Scrolled="ProductsScrollView_Scrolled"
+            VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout>
+
+                <!--  Products  -->
+                <CollectionView ItemsSource="{Binding Products}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:ProductsModel">
+                            <component:ProductVerticalVariantComponent
+                                Name="{Binding Name}"
+                                AvgRating="{Binding AvgRating}"
+                                Brand="{Binding Brand}"
+                                CountReview="{Binding ReviewCount}"
+                                DiscountType="{Binding DiscountType}"
+                                DiscountValue="{Binding DiscountValue}"
+                                HasDiscount="{Binding HasDiscount}"
+                                HasDiscountType="{Binding HasDiscountType}"
+                                HasDiscountValue="{Binding HasDiscountValue}"
+                                Image="{Binding FullImageUrl}"
+                                NewPrice="{Binding NewPrice}"
+                                OldPrice="{Binding OldPrice}"
+                                ProductId="{Binding Id}"
+                                TextColor="{Binding TextColor}" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!--  Pagination  -->
+                <HorizontalStackLayout
+                    Padding="20"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding IsPaginationVisible}"
+                    Spacing="10">
+                    <Border
+                        BackgroundColor="Black"
+                        HeightRequest="30"
+                        StrokeShape="RoundRectangle 15"
+                        StrokeThickness="0"
+                        WidthRequest="30">
+                        <Image Source="back.png" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding PreviousPageCommand}" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border
+                        HeightRequest="30"
+                        StrokeThickness="0"
+                        WidthRequest="30">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            HorizontalOptions="Center"
+                            Text="{Binding CurrentPage}"
+                            VerticalOptions="Center" />
+                    </Border>
+                    <Border
+                        BackgroundColor="Black"
+                        HeightRequest="30"
+                        StrokeShape="RoundRectangle 15"
+                        StrokeThickness="0"
+                        WidthRequest="30">
+                        <Image Source="forward.png" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NextPageCommand}" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!--  Button to go to top of page  -->
+        <Border
+            x:Name="GoToTopButton"
+            Grid.Row="1"
+            Margin="20,40"
+            BackgroundColor="{StaticResource Primary}"
+            HeightRequest="40"
+            HorizontalOptions="End"
+            IsVisible="{Binding IsFilterVisible, Converter={StaticResource InverseBooleanConverter}}"
+            StrokeShape="RoundRectangle 20"
+            StrokeThickness="0"
+            VerticalOptions="End"
+            WidthRequest="40">
+            <ImageButton
+                Aspect="AspectFit"
+                Clicked="Go_To_Top_ImageButton_Clicked"
+                Rotation="90"
+                Source="back.png"
+                WidthRequest="34" />
+        </Border>
+    </Grid>
+
+    <!--  Bottom sheet  -->
+    <uranium:UraniumContentPage.Attachments>
+        <material:BottomSheetView
+            x:Name="FiltersBottomSheet"
+            BackgroundColor="{StaticResource Gray950}"
+            HeightRequest="500">
+            <VerticalStackLayout Padding="16,32" Spacing="10">
+                <!--  Title and button for applying filters  -->
+                <Grid>
+                    <Label
+                        FontSize="20"
+                        HorizontalOptions="Start"
+                        Text="Filteri"
+                        TextColor="White" />
+                    <Button
+                        Margin="0,0,5,0"
+                        Background="{StaticResource Primary}"
+                        Command="{Binding ApplyFiltersCommand}"
+                        CornerRadius="17"
+                        HeightRequest="34"
+                        HorizontalOptions="End"
+                        Text="Primeni"
+                        TextColor="White"
+                        WidthRequest="100" />
+                </Grid>
+
+                <!--  Price  -->
+                <HorizontalStackLayout x:Name="SliderComponent" Spacing="20">
+                    <Label
+                        FontSize="18"
+                        HorizontalOptions="Start"
+                        Text="Cena"
+                        TextColor="White"
+                        VerticalOptions="Center" />
+                    <Border HorizontalOptions="Center" StrokeThickness="0">
+                        <HorizontalStackLayout Spacing="15">
+                            <material:TextField
+                                AccentColor="{StaticResource Primary}"
+                                BorderColor="White"
+                                Keyboard="Numeric"
+                                Text="{Binding MinPrice}"
+                                TextColor="White"
+                                WidthRequest="100" />
+                            <material:TextField
+                                AccentColor="{StaticResource Primary}"
+                                BorderColor="White"
+                                Keyboard="Numeric"
+                                Text="{Binding MaxPrice}"
+                                TextColor="White"
+                                WidthRequest="100" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </HorizontalStackLayout>
+
+                <!--  Brands  -->
+                <VerticalStackLayout Spacing="10">
+                    <Label
+                        FontSize="18"
+                        HorizontalOptions="Start"
+                        Text="Brand"
+                        TextColor="White" />
+                    <CollectionView
+                        HorizontalOptions="Center"
+                        ItemsSource="{Binding Brands}"
+                        WidthRequest="350">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout
+                                HorizontalItemSpacing="10"
+                                Orientation="Vertical"
+                                Span="3"
+                                VerticalItemSpacing="10" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:BrandModel">
+                                <material:CheckBox
+                                    BorderColor="{StaticResource Primary}"
+                                    CornerRadius="5"
+                                    IsChecked="{Binding IsSelected}"
+                                    Text="{Binding Name}"
+                                    TextColor="White" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <!--  Colors  -->
+                <VerticalStackLayout Spacing="10">
+                    <uranium:SelectableLabel
+                        FontSize="18"
+                        HorizontalOptions="Start"
+                        Text="Boje"
+                        TextColor="White" />
+                    <CollectionView
+                        HorizontalOptions="End"
+                        ItemsSource="{Binding VisibleColors}"
+                        WidthRequest="350">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout
+                                HorizontalItemSpacing="10"
+                                Orientation="Vertical"
+                                Span="5"
+                                VerticalItemSpacing="10" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:ColorModel">
+                                <material:CheckBox
+                                    CornerRadius="5"
+                                    IconColor="{StaticResource Primary}"
+                                    IsChecked="{Binding IsSelected}"
+                                    Text=""
+                                    Color="{Binding Name}" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Button
+                        Margin="0,0,5,0"
+                        Background="{StaticResource Gray100}"
+                        Command="{Binding ToggleColorVisibilityCommand}"
+                        CornerRadius="17"
+                        HeightRequest="34"
+                        HorizontalOptions="End"
+                        IsVisible="{Binding IsShowingAllColors, Converter={StaticResource InverseBooleanConverter}}"
+                        Text="Više"
+                        TextColor="Black"
+                        WidthRequest="100" />
+                    <Button
+                        Margin="0,0,5,0"
+                        Background="{StaticResource Gray100}"
+                        Command="{Binding ToggleColorVisibilityCommand}"
+                        CornerRadius="17"
+                        HeightRequest="34"
+                        HorizontalOptions="End"
+                        IsVisible="{Binding IsShowingAllColors}"
+                        Text="Manje"
+                        TextColor="Black"
+                        WidthRequest="100" />
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </material:BottomSheetView>
+    </uranium:UraniumContentPage.Attachments>
+</uranium:UraniumContentPage>

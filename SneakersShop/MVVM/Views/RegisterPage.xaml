@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.MVVM.Views.RegisterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodel="clr-namespace:SneakersShop.MVVM.ViewModels"
+    x:DataType="viewmodel:RegisterViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                      Dark={StaticResource Gray950}}">
+    <ContentPage.BindingContext>
+        <viewmodel:RegisterViewModel />
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout>
+        <BoxView
+            Margin="20"
+            BackgroundColor="Transparent"
+            HeightRequest="40"
+            IsVisible="{Binding NextStepVisible, Converter={StaticResource InverseBooleanConverter}}"
+            WidthRequest="40" />
+        <Border
+            Margin="20"
+            Background="{StaticResource Gray100}"
+            HeightRequest="40"
+            HorizontalOptions="Start"
+            IsVisible="{Binding NextStepVisible}"
+            StrokeShape="RoundRectangle 20"
+            StrokeThickness="0"
+            VerticalOptions="Center"
+            WidthRequest="40">
+            <Image
+                Aspect="AspectFit"
+                HeightRequest="20"
+                Source="back.svg"
+                StyleClass="ElevatedButton"
+                WidthRequest="20">
+                <Image.Behaviors>
+                    <mct:IconTintColorBehavior TintColor="Black" />
+                </Image.Behaviors>
+            </Image>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToNextStepCommand}" />
+            </Border.GestureRecognizers>
+        </Border>
+        <Label
+            Margin="0,50,0,0"
+            FontAttributes="Bold"
+            FontSize="44"
+            HorizontalOptions="Center"
+            Text="Sneakers Shop"
+            TextTransform="Uppercase" />
+        <VerticalStackLayout
+            HorizontalOptions="Center"
+            Spacing="20"
+            VerticalOptions="Center">
+
+            <Label
+                Margin="0,150,0,0"
+                FontAttributes="Bold"
+                FontSize="44"
+                HorizontalTextAlignment="Center"
+                Text="Registracija" />
+            <!--  First name, last name, phone, image  -->
+            <VerticalStackLayout IsVisible="{Binding NextStepVisible, Converter={StaticResource InverseBooleanConverter}}" Spacing="20">
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Ime"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding FirstName}" />
+                    <Label
+                        IsVisible="{Binding FirstNameHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding FirstNameError}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Prezime"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding LastName}" />
+                    <Label
+                        IsVisible="{Binding LastNameHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding LastNameError}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Broj Telefona"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding Phone}" />
+                    <Label
+                        IsVisible="{Binding PhoneHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding PhoneError}" />
+                </VerticalStackLayout>
+
+                <Button
+                    Command="{Binding PickImageCommand}"
+                    Style="{StaticResource DarkButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Dodaj sliku" />
+
+                <VerticalStackLayout>
+                    <Button
+                        Command="{Binding GoToNextStepCommand}"
+                        FontAttributes="Bold"
+                        Style="{StaticResource PrimaryButton}"
+                        StyleClass="ElevatedButton"
+                        Text="Sledeći korak" />
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                        <Label Text="Već imate nalog?" VerticalOptions="Center" />
+                        <Button
+                            Clicked="Login_Button_Clicked"
+                            Style="{StaticResource TextButton}"
+                            Text="Prijavi se" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <!--  Email, username, password  -->
+            <VerticalStackLayout IsVisible="{Binding NextStepVisible}" Spacing="20">
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="E-adresa"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding Email}" />
+                    <Label
+                        IsVisible="{Binding EmailHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding EmailError}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Korisničko Ime"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding Username}" />
+                    <Label
+                        IsVisible="{Binding UsernameHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding UsernameError}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Lozinka"
+                        IsPassword="True"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding Password}">
+                        <material:TextField.Attachments>
+                            <material:TextFieldPasswordShowHideAttachment />
+                        </material:TextField.Attachments>
+                    </material:TextField>
+                    <Label
+                        IsVisible="{Binding PasswordHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding PasswordError}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout>
+                    <Button
+                        Command="{Binding RegisterCommand}"
+                        FontAttributes="Bold"
+                        IsEnabled="{Binding IsRegisterButtonEnabled}"
+                        Style="{StaticResource PrimaryButton}"
+                        StyleClass="ElevatedButton"
+                        Text="Registruj se" />
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                        <Label Text="Već imate nalog?" VerticalOptions="Center" />
+                        <Button
+                            Clicked="Login_Button_Clicked"
+                            Style="{StaticResource TextButton}"
+                            Text="Prijavi se" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

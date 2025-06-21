@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.MVVM.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:component="clr-namespace:SneakersShop.Components"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:model="clr-namespace:SneakersShop.MVVM.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.MVVM.ViewModels"
+    x:DataType="viewmodel:HomeViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                      Dark={StaticResource Gray950}}"
+    Shell.NavBarIsVisible="False">
+    <ContentPage.BindingContext>
+        <viewmodel:HomeViewModel />
+    </ContentPage.BindingContext>
+    <ScrollView>
+        <VerticalStackLayout VerticalOptions="Center">
+            <ActivityIndicator
+                IsRunning="{Binding IsLoading}"
+                IsVisible="{Binding IsLoading}"
+                Color="{StaticResource Primary}" />
+            <VerticalStackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+                <!--  Pretraga / notifikacije  -->
+                <Border
+                    Grid.Row="0"
+                    Margin="0,0,0,10"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100},
+                                                      Dark={StaticResource Gray600}}"
+                    StrokeShape="RoundRectangle 0,0,30,30"
+                    StrokeThickness="0">
+                    <HorizontalStackLayout Margin="20" Spacing="15">
+                        <!--  Pretraga  -->
+                        <material:TextField
+                            x:Name="SearchField"
+                            AccentColor="Transparent"
+                            AllowClear="True"
+                            BorderThickness="0"
+                            Completed="SearchField_Completed"
+                            CornerRadius="20"
+                            Icon="search.svg"
+                            InputBackgroundColor="{StaticResource OffBlack}"
+                            Text="{Binding Keyword}"
+                            TextColor="White"
+                            VerticalOptions="Center"
+                            WidthRequest="310">
+                            <material:TextField.Attachments>
+                                <Button
+                                    Margin="0,0,5,0"
+                                    Background="{StaticResource Primary}"
+                                    Clicked="Search_Button_Clicked"
+                                    CornerRadius="17"
+                                    HeightRequest="34"
+                                    StyleClass="ElevatedButton"
+                                    Text="Pretraži"
+                                    TextColor="White"
+                                    WidthRequest="105" />
+                            </material:TextField.Attachments>
+                        </material:TextField>
+                        <!--  notifikacije  -->
+                        <Grid>
+                            <Border
+                                Background="White"
+                                HeightRequest="40"
+                                StrokeShape="RoundRectangle 20"
+                                StrokeThickness="0"
+                                StyleClass="Elevation1"
+                                WidthRequest="40">
+                                <Image
+                                    Aspect="AspectFit"
+                                    Source="bell.svg"
+                                    WidthRequest="20">
+                                    <Image.Behaviors>
+                                        <mct:IconTintColorBehavior TintColor="Black" />
+                                    </Image.Behaviors>
+                                </Image>
+                            </Border>
+                            <Border
+                                BackgroundColor="OrangeRed"
+                                HeightRequest="10"
+                                StrokeShape="RoundRectangle 5"
+                                StrokeThickness="0"
+                                TranslationX="15"
+                                TranslationY="-15"
+                                WidthRequest="10" />
+                        </Grid>
+                        <Entry x:Name="DummyEntry" IsVisible="False" />
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!--  Banner neki TODO: mozda neki automatski slider  -->
+                <Border
+                    HeightRequest="250"
+                    StrokeShape="RoundRectangle 30"
+                    StrokeThickness="0"
+                    WidthRequest="400">
+                    <Grid>
+                        <Image
+                            Aspect="AspectFill"
+                            Source="banner.png"
+                            ZIndex="-2" />
+                        <BoxView
+                            BackgroundColor="Black"
+                            HeightRequest="250"
+                            Opacity="0.4"
+                            ZIndex="-1" />
+                        <VerticalStackLayout Margin="10,50,0,0">
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="42"
+                                Text="Iztraži našu"
+                                TextColor="White" />
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="42"
+                                Text="najnoviju kolekciju"
+                                TextColor="White" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!--  Brands  -->
+                <ScrollView
+                    Margin="10,20"
+                    HorizontalScrollBarVisibility="Never"
+                    Orientation="Horizontal">
+                    <CollectionView ItemsSource="{Binding Brands}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:BrandModel">
+                                <Button
+                                    FontSize="16"
+                                    StyleClass="OutlinedButton"
+                                    Text="{Binding Name}"
+                                    TextColor="{AppThemeBinding Light={StaticResource Black},
+                                                                Dark={StaticResource White}}" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+
+                <!--  Nova kolekcija  -->
+                <Label
+                    Margin="10,0"
+                    FontAttributes="Bold"
+                    FontSize="20"
+                    Text="Novo u ponudi" />
+                <ScrollView
+                    Margin="10,20"
+                    HorizontalScrollBarVisibility="Never"
+                    Orientation="Horizontal">
+                    <CollectionView ItemsSource="{Binding NewCollection}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:ProductsModel">
+                                <component:ProductHorizontalVariantComponent
+                                    Name="{Binding Name}"
+                                    AvgRating="{Binding AvgRating}"
+                                    Brand="{Binding Brand}"
+                                    CountReview="{Binding ReviewCount}"
+                                    DiscountType="{Binding DiscountType}"
+                                    DiscountValue="{Binding DiscountValue}"
+                                    HasDiscount="{Binding HasDiscount}"
+                                    HasDiscountType="{Binding HasDiscountType}"
+                                    HasDiscountValue="{Binding HasDiscountValue}"
+                                    Image="{Binding FullImageUrl}"
+                                    NewPrice="{Binding NewPrice}"
+                                    OldPrice="{Binding OldPrice}"
+                                    ProductId="{Binding Id}"
+                                    TextColor="{Binding TextColor}" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+
+                <!--  Kategorije  -->
+                <HorizontalStackLayout Margin="10,20" HorizontalOptions="Center">
+                    <CollectionView ItemsSource="{Binding Categories}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:CategoryModel">
+                                <Button
+                                    FontSize="16"
+                                    StyleClass="OutlinedButton"
+                                    Text="{Binding Name}"
+                                    TextColor="{AppThemeBinding Light={StaticResource Black},
+                                                                Dark={StaticResource White}}" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </HorizontalStackLayout>
+
+                <!--  Najprodavaniji  -->
+                <Label
+                    Margin="10,0"
+                    FontAttributes="Bold"
+                    FontSize="20"
+                    Text="Najprodavaniji" />
+                <ScrollView
+                    Margin="10,20"
+                    HorizontalScrollBarVisibility="Never"
+                    Orientation="Horizontal">
+                    <CollectionView ItemsSource="{Binding BestSeller}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:ProductsModel">
+                                <component:ProductHorizontalVariantComponent
+                                    Name="{Binding Name}"
+                                    AvgRating="{Binding AvgRating}"
+                                    Brand="{Binding Brand}"
+                                    CountReview="{Binding ReviewCount}"
+                                    DiscountType="{Binding DiscountType}"
+                                    DiscountValue="{Binding DiscountValue}"
+                                    HasDiscount="{Binding HasDiscount}"
+                                    HasDiscountType="{Binding HasDiscountType}"
+                                    HasDiscountValue="{Binding HasDiscountValue}"
+                                    Image="{Binding FullImageUrl}"
+                                    NewPrice="{Binding NewPrice}"
+                                    OldPrice="{Binding OldPrice}"
+                                    ProductId="{Binding Id}"
+                                    TextColor="{Binding TextColor}" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+
+                <!--  Best Seller  -->
+                <Label
+                    Margin="10,0"
+                    FontAttributes="Bold"
+                    FontSize="20"
+                    Text="Najbolje ocenjeni" />
+                <ScrollView
+                    Margin="10,20"
+                    HorizontalScrollBarVisibility="Never"
+                    Orientation="Horizontal">
+                    <CollectionView ItemsSource="{Binding BestSeller}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:ProductsModel">
+                                <component:ProductHorizontalVariantComponent
+                                    Name="{Binding Name}"
+                                    AvgRating="{Binding AvgRating}"
+                                    Brand="{Binding Brand}"
+                                    CountReview="{Binding ReviewCount}"
+                                    DiscountType="{Binding DiscountType}"
+                                    DiscountValue="{Binding DiscountValue}"
+                                    HasDiscount="{Binding HasDiscount}"
+                                    HasDiscountType="{Binding HasDiscountType}"
+                                    HasDiscountValue="{Binding HasDiscountValue}"
+                                    Image="{Binding FullImageUrl}"
+                                    NewPrice="{Binding NewPrice}"
+                                    OldPrice="{Binding OldPrice}"
+                                    ProductId="{Binding Id}"
+                                    TextColor="{Binding TextColor}" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+
+                <!--  Recommended  -->
+                <!--<Label
+                    Margin="10,0"
+                    FontAttributes="Bold"
+                    FontSize="20"
+                    Text="Preporučeno za vas" />
+                <ScrollView
+                    Margin="10,20"
+                    HorizontalScrollBarVisibility="Never"
+                    Orientation="Horizontal">
+                    <CollectionView ItemsSource="{Binding RecommendedProducts}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:ProductsModel">
+                                <component:ProductHorizontalVariantComponent
+                                     Name="{Binding Name}"
+                                     AvgRating="{Binding AvgRating}"
+                                     Brand="{Binding Brand}"
+                                     CountReview="{Binding ReviewCount}"
+                                     DiscountType="{Binding DiscountType}"
+                                     DiscountValue="{Binding DiscountValue}"
+                                     HasDiscount="{Binding HasDiscount}"
+                                     HasDiscountType="{Binding HasDiscountType}"
+                                     Image="{Binding FullImageUrl}"
+                                     NewPrice="{Binding NewPrice}"
+                                     OldPrice="{Binding OldPrice}"
+                                     ProductId="{Binding Id}"
+                                     TextColor="{Binding TextColor}" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>-->
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.MVVM.Views.UpdateProfilePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodel="clr-namespace:SneakersShop.MVVM.ViewModels"
+    x:DataType="viewmodel:UpdateUserViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                      Dark={StaticResource Gray950}}"
+    Shell.NavBarIsVisible="False">
+    <Grid>
+        <HorizontalStackLayout Margin="20" VerticalOptions="Start">
+            <Border
+                Background="{StaticResource Gray100}"
+                HeightRequest="40"
+                HorizontalOptions="Start"
+                StrokeShape="RoundRectangle 20"
+                StrokeThickness="0"
+                WidthRequest="40">
+                <Image
+                    Aspect="AspectFit"
+                    HeightRequest="20"
+                    Source="back.svg"
+                    StyleClass="ElevatedButton"
+                    WidthRequest="20">
+                    <Image.Behaviors>
+                        <mct:IconTintColorBehavior TintColor="Black" />
+                    </Image.Behaviors>
+                </Image>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Back_TapGestureRecognizer_Tapped" />
+                </Border.GestureRecognizers>
+            </Border>
+            <Label
+                Margin="10,0"
+                FontAttributes="Bold"
+                FontSize="22"
+                Text="Izmeni Profil"
+                VerticalOptions="Center" />
+        </HorizontalStackLayout>
+        <VerticalStackLayout TranslationY="20" VerticalOptions="Center">
+            <Grid>
+                <Border
+                    Grid.Column="1"
+                    BackgroundColor="White"
+                    HeightRequest="150"
+                    HorizontalOptions="Center"
+                    StrokeShape="RoundRectangle 75"
+                    WidthRequest="150">
+                    <Border
+                        Grid.Column="1"
+                        HeightRequest="140"
+                        HorizontalOptions="Center"
+                        StrokeShape="RoundRectangle 70"
+                        VerticalOptions="Center"
+                        WidthRequest="140">
+                        <Image Aspect="AspectFill" Source="{Binding DisplayedImageSource}" />
+                        <!--<Image Aspect="AspectFill">
+                            <Image.Source>
+                                <Binding Converter="{StaticResource Base64ToImageConverter}" Path="Image">
+                                    <Binding.FallbackValue>
+                                        <UriImageSource Uri="{Binding User.FullImageUrl}" />
+                                    </Binding.FallbackValue>
+                                </Binding>
+                            </Image.Source>
+                        </Image>-->
+                    </Border>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding PickImageCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border
+                    Padding="5"
+                    BackgroundColor="White"
+                    HeightRequest="40"
+                    StrokeShape="RoundRectangle 20"
+                    TranslationX="60"
+                    TranslationY="-60"
+                    WidthRequest="40">
+                    <ImageButton
+                        HeightRequest="20"
+                        Source="edit.svg"
+                        WidthRequest="20">
+                        <ImageButton.Behaviors>
+                            <mct:IconTintColorBehavior TintColor="Black" />
+                        </ImageButton.Behaviors>
+                    </ImageButton>
+                </Border>
+            </Grid>
+            <VerticalStackLayout Margin="0,20,0,0" Spacing="15">
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Ime"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding FirstName}" />
+                    <Label
+                        IsVisible="{Binding FirstNameHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding FirstNameError}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Prezime"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding LastName}" />
+                    <Label
+                        IsVisible="{Binding LastNameHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding LastNameError}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="E-adresa"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding Email}" />
+                    <Label
+                        IsVisible="{Binding EmailHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding EmailError}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Broj Telefona"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding Phone}" />
+                    <Label
+                        IsVisible="{Binding PhoneHasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding PhoneError}" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+            <Button
+                Margin="0,10"
+                BackgroundColor="{StaticResource Primary}"
+                Command="{Binding UpdateUserCommand}"
+                CornerRadius="30"
+                FontSize="16"
+                StyleClass="ElevatedButton"
+                Text="Primeni promene"
+                TextColor="White"
+                WidthRequest="350" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

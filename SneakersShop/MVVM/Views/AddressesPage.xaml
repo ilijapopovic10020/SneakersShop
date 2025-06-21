@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.MVVM.Views.AddressesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:models="clr-namespace:SneakersShop.MVVM.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.MVVM.ViewModels"
+    x:DataType="viewmodel:AddressesViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                      Dark={StaticResource Gray950}}"
+    Shell.NavBarIsVisible="False">
+    <Grid>
+        <ActivityIndicator
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center"
+            Color="{StaticResource Primary}" />
+        <HorizontalStackLayout Margin="20" VerticalOptions="Start">
+            <Border
+                BackgroundColor="#f1f1f1"
+                HeightRequest="40"
+                HorizontalOptions="Start"
+                StrokeShape="RoundRectangle 20"
+                StrokeThickness="0"
+                WidthRequest="40">
+                <Image
+                    Aspect="AspectFit"
+                    HeightRequest="20"
+                    Source="back.svg"
+                    StyleClass="ElevatedButton"
+                    WidthRequest="20">
+                    <Image.Behaviors>
+                        <mct:IconTintColorBehavior TintColor="Black" />
+                    </Image.Behaviors>
+                </Image>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Back_TapGestureRecognizer_Tapped" />
+                </Border.GestureRecognizers>
+            </Border>
+            <Label
+                Margin="10,0"
+                FontAttributes="Bold"
+                FontSize="22"
+                Text="Izmeni Profil"
+                VerticalOptions="Center" />
+        </HorizontalStackLayout>
+
+        <VerticalStackLayout
+            Padding="20"
+            IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+            VerticalOptions="Center">
+            <CollectionView ItemsSource="{Binding Addresses}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:AddressModel">
+                        <Grid>
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem
+                                            BackgroundColor="LightBlue"
+                                            Clicked="Edit_Address_SwipeItem_Clicked"
+                                            CommandParameter="{Binding .}"
+                                            Text="Izmeni" />
+                                        <SwipeItem
+                                            BackgroundColor="IndianRed"
+                                            Command="{Binding DeleteAddressCommand, Source={RelativeSource AncestorType={x:Type viewmodel:AddressesViewModel}}}"
+                                            CommandParameter="{Binding Id}"
+                                            Text="Obri&#353;i" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Border
+                                    Margin="10"
+                                    Padding="25,5"
+                                    BackgroundColor="{Binding BackgroundColor}"
+                                    HeightRequest="100"
+                                    StrokeShape="RoundRectangle 20"
+                                    StrokeThickness="0"
+                                    StyleClass="Elevation1">
+                                    <StackLayout>
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="18"
+                                            Text="{Binding Street}"
+                                            TextColor="{Binding TextColor}" />
+                                        <HorizontalStackLayout>
+                                            <Label
+                                                FontSize="16"
+                                                Text="{Binding City}"
+                                                TextColor="{Binding TextColor}"
+                                                VerticalOptions="End" />
+                                            <Label
+                                                FontSize="12"
+                                                Text=", "
+                                                TextColor="{Binding TextColor}"
+                                                VerticalOptions="End" />
+                                            <Label
+                                                FontSize="12"
+                                                Text="{Binding ZipCode}"
+                                                TextColor="{Binding TextColor}"
+                                                VerticalOptions="End" />
+                                        </HorizontalStackLayout>
+                                    </StackLayout>
+                                </Border>
+                            </SwipeView>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Border
+                Margin="20,0"
+                BackgroundColor="{StaticResource Primary}"
+                HeightRequest="60"
+                HorizontalOptions="End"
+                IsVisible="{Binding IsAddNewAddressVisible}"
+                StrokeShape="RoundRectangle 30"
+                StrokeThickness="0"
+                StyleClass="Elevation1"
+                WidthRequest="60">
+                <Label
+                    FontSize="36"
+                    HorizontalOptions="Center"
+                    Text="+"
+                    TextColor="White"
+                    VerticalOptions="Center" />
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Add_Address_TapGestureRecognizer_Tapped" />
+                </Border.GestureRecognizers>
+            </Border>
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

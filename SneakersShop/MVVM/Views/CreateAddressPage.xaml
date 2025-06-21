@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.MVVM.Views.CreateAddressPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:model="clr-namespace:SneakersShop.MVVM.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.MVVM.ViewModels"
+    BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                      Dark={StaticResource Gray950}}"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False">
+    <ContentPage.BindingContext>
+        <viewmodel:CreateAddressViewModel />
+    </ContentPage.BindingContext>
+
+
+    <Grid>
+        <Border
+            Grid.Row="0"
+            Margin="10"
+            Background="{StaticResource Gray100}"
+            HeightRequest="40"
+            HorizontalOptions="Start"
+            StrokeShape="RoundRectangle 20"
+            StrokeThickness="0"
+            VerticalOptions="Start"
+            WidthRequest="40">
+            <Image
+                Aspect="AspectFit"
+                HeightRequest="20"
+                Source="back.svg"
+                StyleClass="ElevatedButton"
+                WidthRequest="20">
+                <Image.Behaviors>
+                    <mct:IconTintColorBehavior TintColor="Black" />
+                </Image.Behaviors>
+            </Image>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="Back_TapGestureRecognizer_Tapped" />
+            </Border.GestureRecognizers>
+        </Border>
+        <VerticalStackLayout
+            HorizontalOptions="Center"
+            Spacing="20"
+            VerticalOptions="Center">
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="44"
+                HorizontalTextAlignment="Center"
+                Text="Dodaj adresu" />
+            <VerticalStackLayout Spacing="20">
+                <material:TextField
+                    Title="Ulica i broj"
+                    AccentColor="Black"
+                    CornerRadius="20"
+                    Text="{Binding Street}"
+                    WidthRequest="350" />
+
+                <material:PickerField
+                    Title="Grad"
+                    AccentColor="Black"
+                    CornerRadius="20"
+                    ItemDisplayBinding="{Binding Name}"
+                    ItemsSource="{Binding Cities}"
+                    SelectedItem="{Binding SelectedCity}"
+                    WidthRequest="350" />
+                <Button
+                    Margin="0,10"
+                    BackgroundColor="{StaticResource Primary}"
+                    Command="{Binding AddNewAddressCommand}"
+                    CornerRadius="30"
+                    FontSize="16"
+                    StyleClass="ElevatedButton"
+                    Text="Potvrdi"
+                    TextColor="White"
+                    WidthRequest="350" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

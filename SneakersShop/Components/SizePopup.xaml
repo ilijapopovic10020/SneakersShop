@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<popups:Popup
+    x:Class="SneakersShop.Components.SizePopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:model="clr-namespace:SneakersShop.MVVM.Models"
+    xmlns:popups="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    CanBeDismissedByTappingOutsideOfPopup="True"
+    Color="Transparent">
+    <Border
+        Padding="20"
+        BackgroundColor="White"
+        HeightRequest="500"
+        StrokeShape="RoundRectangle 30"
+        WidthRequest="350">
+        <Grid>
+            <Label
+                FontSize="16"
+                Text="Promeni veličinu"
+                TextColor="Black">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelTapped" />
+                </Label.GestureRecognizers>
+            </Label>
+            <ScrollView Margin="0,13,0,13">
+                <CollectionView
+                    HorizontalOptions="Center"
+                    ItemsSource="{Binding Sizes}"
+                    SelectionChanged="CollectionView_SelectionChanged"
+                    SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:SizeModel">
+                            <Border
+                                Margin="30,10"
+                                Padding="0,10"
+                                BackgroundColor="{Binding BackgroundColor}"
+                                StrokeShape="RoundRectangle 20"
+                                StrokeThickness="0"
+                                WidthRequest="150">
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="16"
+                                    HorizontalTextAlignment="Center"
+                                    Text="{Binding Number}"
+                                    TextColor="{Binding TextColor}" />
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+            <Label
+                FontSize="16"
+                HorizontalOptions="End"
+                Text="Otka&#382;i"
+                TextColor="Black"
+                VerticalOptions="End">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelTapped" />
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
+    </Border>
+</popups:Popup>
