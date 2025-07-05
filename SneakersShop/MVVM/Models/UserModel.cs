@@ -4,7 +4,8 @@ namespace SneakersShop.MVVM.Models
 {
     public class LoginModel : BaseModel
     {
-        public required string Token { get; set; }
+        public required string AccessToken { get; set; }
+        public required string RefreshToken { get; set; }
         public DateTime LoginExparation { get; set; }
         public bool ShouldBeLoggedOut => LoginExparation < DateTime.UtcNow;
     }

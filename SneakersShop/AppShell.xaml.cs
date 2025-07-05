@@ -1,6 +1,7 @@
 ﻿using SneakersShop.Helpers.Extensions;
 using SneakersShop.MVVM.Views;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace SneakersShop
 {
@@ -29,9 +30,17 @@ namespace SneakersShop
 
             Routing.RegisterRoute(nameof(CreateAddressPage), typeof(CreateAddressPage));
 
-            
-
             UpdateFavoriteTab();
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            var navigationStack = Shell.Current?.CurrentItem?.CurrentItem?.Navigation?.NavigationStack;
+
+            if (navigationStack != null && navigationStack.Count > 1)
+                await Navigation.PopToRootAsync();
         }
 
         private async void UpdateFavoriteTab()

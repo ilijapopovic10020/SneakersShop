@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using SneakersShop.Helpers;
 using SneakersShop.Helpers.Extensions;
 using SneakersShop.MVVM.Models;
@@ -47,7 +46,7 @@ public partial class CartPage : ContentPage
             else
             {
                 var cartViewModel = ((CartViewModel)BindingContext);
-                await Navigation.PushAsync(new FinishOrderPage(itemsToOrder, totalPrice, cartQuantity, cartViewModel as CartViewModel));
+                await Navigation.PushAsync(new CreateOrderPage(itemsToOrder, totalPrice, cartQuantity, cartViewModel));
             }
         }
     }

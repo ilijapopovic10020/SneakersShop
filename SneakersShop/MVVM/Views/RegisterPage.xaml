@@ -13,98 +13,124 @@
         <viewmodel:RegisterViewModel />
     </ContentPage.BindingContext>
 
-    <VerticalStackLayout>
-        <BoxView
-            Margin="20"
-            BackgroundColor="Transparent"
-            HeightRequest="40"
-            IsVisible="{Binding NextStepVisible, Converter={StaticResource InverseBooleanConverter}}"
-            WidthRequest="40" />
-        <Border
-            Margin="20"
-            Background="{StaticResource Gray100}"
-            HeightRequest="40"
-            HorizontalOptions="Start"
-            IsVisible="{Binding NextStepVisible}"
-            StrokeShape="RoundRectangle 20"
-            StrokeThickness="0"
-            VerticalOptions="Center"
-            WidthRequest="40">
-            <Image
-                Aspect="AspectFit"
-                HeightRequest="20"
-                Source="back.svg"
-                StyleClass="ElevatedButton"
-                WidthRequest="20">
-                <Image.Behaviors>
-                    <mct:IconTintColorBehavior TintColor="Black" />
-                </Image.Behaviors>
-            </Image>
-            <Border.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding GoToNextStepCommand}" />
-            </Border.GestureRecognizers>
-        </Border>
-        <Label
-            Margin="0,50,0,0"
-            FontAttributes="Bold"
-            FontSize="44"
-            HorizontalOptions="Center"
-            Text="Sneakers Shop"
-            TextTransform="Uppercase" />
+    <Grid>
         <VerticalStackLayout
             HorizontalOptions="Center"
             Spacing="20"
             VerticalOptions="Center">
-
-            <Label
-                Margin="0,150,0,0"
-                FontAttributes="Bold"
-                FontSize="44"
-                HorizontalTextAlignment="Center"
-                Text="Registracija" />
+            <Grid>
+                <Border
+                    Margin="20"
+                    Background="{StaticResource Gray100}"
+                    HeightRequest="40"
+                    HorizontalOptions="Start"
+                    IsVisible="{Binding NextStepVisible}"
+                    StrokeShape="RoundRectangle 20"
+                    StrokeThickness="0"
+                    TranslationX="-20"
+                    VerticalOptions="Center"
+                    WidthRequest="40">
+                    <Image
+                        Aspect="AspectFit"
+                        HeightRequest="20"
+                        Source="back.svg"
+                        StyleClass="ElevatedButton"
+                        WidthRequest="20">
+                        <Image.Behaviors>
+                            <mct:IconTintColorBehavior TintColor="Black" />
+                        </Image.Behaviors>
+                    </Image>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToNextStepCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="44"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"
+                    Text="Registracija"
+                    VerticalOptions="Center" />
+            </Grid>
             <!--  First name, last name, phone, image  -->
             <VerticalStackLayout IsVisible="{Binding NextStepVisible, Converter={StaticResource InverseBooleanConverter}}" Spacing="20">
+                <Border
+                    Grid.Column="1"
+                    BackgroundColor="White"
+                    HeightRequest="150"
+                    HorizontalOptions="Center"
+                    StrokeShape="RoundRectangle 75"
+                    WidthRequest="150">
+                    <Border
+                        Grid.Column="1"
+                        HeightRequest="140"
+                        HorizontalOptions="Center"
+                        StrokeShape="RoundRectangle 70"
+                        VerticalOptions="Center"
+                        WidthRequest="140">
+                        <Image Aspect="AspectFill" Source="{Binding DisplayedImageSource}" />
+                    </Border>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding PickImageCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border
+                    Padding="5"
+                    BackgroundColor="White"
+                    HeightRequest="40"
+                    StrokeShape="RoundRectangle 20"
+                    TranslationX="60"
+                    TranslationY="-160"
+                    WidthRequest="40">
+                    <ImageButton
+                        HeightRequest="20"
+                        Source="edit.svg"
+                        WidthRequest="20">
+                        <ImageButton.Behaviors>
+                            <mct:IconTintColorBehavior TintColor="Black" />
+                        </ImageButton.Behaviors>
+                    </ImageButton>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding PickImageCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
+
                 <VerticalStackLayout>
                     <material:TextField
                         Title="Ime"
                         Style="{StaticResource PrimaryTextField}"
-                        Text="{Binding FirstName}" />
+                        Text="{Binding FirstName.Value}" />
                     <Label
-                        IsVisible="{Binding FirstNameHasError}"
+                        IsVisible="{Binding FirstName.HasError}"
                         Style="{StaticResource ErrorLabel}"
-                        Text="{Binding FirstNameError}" />
+                        Text="{Binding FirstName.Error}" />
                 </VerticalStackLayout>
                 <VerticalStackLayout>
                     <material:TextField
                         Title="Prezime"
                         Style="{StaticResource PrimaryTextField}"
-                        Text="{Binding LastName}" />
+                        Text="{Binding LastName.Value}" />
                     <Label
-                        IsVisible="{Binding LastNameHasError}"
+                        IsVisible="{Binding LastName.HasError}"
                         Style="{StaticResource ErrorLabel}"
-                        Text="{Binding LastNameError}" />
+                        Text="{Binding LastName.Error}" />
                 </VerticalStackLayout>
                 <VerticalStackLayout>
                     <material:TextField
                         Title="Broj Telefona"
                         Style="{StaticResource PrimaryTextField}"
-                        Text="{Binding Phone}" />
+                        Text="{Binding Phone.Value}" />
                     <Label
-                        IsVisible="{Binding PhoneHasError}"
+                        IsVisible="{Binding Phone.HasError}"
                         Style="{StaticResource ErrorLabel}"
-                        Text="{Binding PhoneError}" />
+                        Text="{Binding Phone.Error}" />
                 </VerticalStackLayout>
-
-                <Button
-                    Command="{Binding PickImageCommand}"
-                    Style="{StaticResource DarkButton}"
-                    StyleClass="ElevatedButton"
-                    Text="Dodaj sliku" />
 
                 <VerticalStackLayout>
                     <Button
                         Command="{Binding GoToNextStepCommand}"
                         FontAttributes="Bold"
+                        IsEnabled="{Binding IsNextStepEnabled}"
                         Style="{StaticResource PrimaryButton}"
                         StyleClass="ElevatedButton"
                         Text="Sledeći korak" />
@@ -124,36 +150,36 @@
                     <material:TextField
                         Title="E-adresa"
                         Style="{StaticResource PrimaryTextField}"
-                        Text="{Binding Email}" />
+                        Text="{Binding Email.Value}" />
                     <Label
-                        IsVisible="{Binding EmailHasError}"
+                        IsVisible="{Binding Email.HasError}"
                         Style="{StaticResource ErrorLabel}"
-                        Text="{Binding EmailError}" />
+                        Text="{Binding Email.Error}" />
                 </VerticalStackLayout>
                 <VerticalStackLayout>
                     <material:TextField
                         Title="Korisničko Ime"
                         Style="{StaticResource PrimaryTextField}"
-                        Text="{Binding Username}" />
+                        Text="{Binding Username.Value}" />
                     <Label
-                        IsVisible="{Binding UsernameHasError}"
+                        IsVisible="{Binding Username.HasError}"
                         Style="{StaticResource ErrorLabel}"
-                        Text="{Binding UsernameError}" />
+                        Text="{Binding Username.Error}" />
                 </VerticalStackLayout>
                 <VerticalStackLayout>
                     <material:TextField
                         Title="Lozinka"
                         IsPassword="True"
                         Style="{StaticResource PrimaryTextField}"
-                        Text="{Binding Password}">
+                        Text="{Binding Password.Value}">
                         <material:TextField.Attachments>
                             <material:TextFieldPasswordShowHideAttachment />
                         </material:TextField.Attachments>
                     </material:TextField>
                     <Label
-                        IsVisible="{Binding PasswordHasError}"
+                        IsVisible="{Binding Password.HasError}"
                         Style="{StaticResource ErrorLabel}"
-                        Text="{Binding PasswordError}" />
+                        Text="{Binding Password.Error}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
@@ -174,5 +200,5 @@
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </VerticalStackLayout>
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>

@@ -3,7 +3,6 @@ using SneakersShop.Helpers.Extensions;
 using SneakersShop.MVVM.Models;
 using System.Collections.ObjectModel;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -11,6 +10,7 @@ namespace SneakersShop.Services
 {
     public class CartService : BaseService
     {
+        private readonly HttpService _httpService = new();
         private static CartService? instance;
 
         private readonly ObservableCollection<CartModel> cartItems;
@@ -28,9 +28,8 @@ namespace SneakersShop.Services
         {
             var user = await SecureStorage.Default.GetUser();
             var request = new HttpRequestMessage(HttpMethod.Get, "api/cart");
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpService.SendWithAutoRefresh(request);
             ExceptionHelper.ThrowIfUnsuccessful(response);
 
             var content = await response.Content.ReadAsStringAsync();
@@ -47,9 +46,8 @@ namespace SneakersShop.Services
             {
                 Content = content
             };
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpService.SendWithAutoRefresh(request);
             ExceptionHelper.ThrowIfUnsuccessful(response);
 
             return response.StatusCode == HttpStatusCode.OK;

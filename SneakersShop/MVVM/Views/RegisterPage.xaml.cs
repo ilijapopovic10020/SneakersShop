@@ -1,3 +1,6 @@
+using SneakersShop.Helpers;
+using SneakersShop.MVVM.ViewModels;
+
 namespace SneakersShop.MVVM.Views;
 
 public partial class RegisterPage : ContentPage
@@ -11,6 +14,5 @@ public partial class RegisterPage : ContentPage
     {
         if (Application.Current != null)
             Application.Current.MainPage = new LoginPage();
-    }
-
+    }    
 }

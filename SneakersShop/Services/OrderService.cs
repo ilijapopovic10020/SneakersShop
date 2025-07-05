@@ -8,6 +8,8 @@ namespace SneakersShop.Services
 {
     public class OrderService : BaseService
     {
+        private readonly HttpService _httpService = new();
+        
         public async Task<IEnumerable<OrdersModel>> Get(PagedSearchId search)
         {
             var user = await SecureStorage.Default.GetUser();
@@ -28,9 +30,8 @@ namespace SneakersShop.Services
             var endpoint = "api/orders" + (queryParams.Count > 0 ? "?" + string.Join("&", queryParams) : string.Empty);
 
             var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", user.Token);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpService.SendWithAutoRefresh(request);
             ExceptionHelper.ThrowIfUnsuccessful(response);
 
             var orders = await response.Content.ReadFromJsonAsync<IEnumerable<OrdersModel>>();
@@ -48,9 +49,8 @@ namespace SneakersShop.Services
 
             var endpoint = $"api/orders/{id}";
             var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", user.Token);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpService.SendWithAutoRefresh(request);
             ExceptionHelper.ThrowIfUnsuccessful(response);
 
             var order = await response.Content.ReadFromJsonAsync<OrderModel>();
@@ -70,9 +70,8 @@ namespace SneakersShop.Services
             {
                 Content = JsonContent.Create(order)
             };
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", user.Token);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpService.SendWithAutoRefresh(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Created)
                 return true;

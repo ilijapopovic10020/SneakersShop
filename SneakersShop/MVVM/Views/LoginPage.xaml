@@ -15,61 +15,48 @@
         <viewmodel:LoginViewModel />
     </ContentPage.BindingContext>
 
-    <VerticalStackLayout>
-        <BoxView
-            Margin="20"
-            BackgroundColor="Transparent"
-            HeightRequest="40"
-            WidthRequest="40" />
-        <Label
-            Margin="0,50,0,0"
-            FontAttributes="Bold"
-            FontSize="44"
-            HorizontalOptions="Center"
-            Text="Sneakers Shop"
-            TextTransform="Uppercase" />
+    <Grid>
         <VerticalStackLayout
             HorizontalOptions="Center"
             Spacing="20"
             VerticalOptions="Center">
-
             <Label
-                Margin="0,150,0,0"
                 FontAttributes="Bold"
                 FontSize="44"
                 HorizontalTextAlignment="Center"
                 Text="Prijava" />
             <VerticalStackLayout Spacing="20">
-                <VerticalStackLayout>
+                <VerticalStackLayout Spacing="10">
                     <material:TextField
                         Title="Korisničko Ime"
                         Style="{StaticResource PrimaryTextField}"
-                        Text="{Binding Username}" />
+                        Text="{Binding Username.Value}" />
                     <Label
-                        IsVisible="{Binding UsernameHasError}"
+                        IsVisible="{Binding Username.HasError}"
                         Style="{StaticResource ErrorLabel}"
-                        Text="{Binding UsernameError}" />
+                        Text="{Binding Username.Error}" />
                 </VerticalStackLayout>
-                <VerticalStackLayout>
+                <VerticalStackLayout Spacing="10">
                     <material:TextField
                         Title="Lozinka"
                         IsPassword="True"
                         Style="{StaticResource PrimaryTextField}"
-                        Text="{Binding Password}">
+                        Text="{Binding Password.Value}">
                         <material:TextField.Attachments>
                             <material:TextFieldPasswordShowHideAttachment />
                         </material:TextField.Attachments>
                     </material:TextField>
                     <Label
-                        IsVisible="{Binding PasswordHasError}"
+                        IsVisible="{Binding Password.HasError}"
                         Style="{StaticResource ErrorLabel}"
-                        Text="{Binding PasswordError}" />
+                        Text="{Binding Password.Error}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
                     <Button
                         Command="{Binding LoginCommand}"
                         FontAttributes="Bold"
+                        IsEnabled="{Binding IsLoginbuttonEnabled}"
                         Style="{StaticResource PrimaryButton}"
                         StyleClass="ElevatedButton"
                         Text="Prijavi se" />
@@ -85,5 +72,5 @@
             </VerticalStackLayout>
 
         </VerticalStackLayout>
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>

@@ -94,6 +94,6 @@ namespace SneakersShop.MVVM.Models
         [JsonIgnore]
         public string FullImageUrl => $"{AppConstants.IMAGE_URL}{Image}";
         [JsonIgnore]
-        public Color BorderColor => IsSelected ? Color.FromArgb("#000") : Colors.Transparent;
+        public Color BorderColor => IsSelected ? Color.FromArgb("#FF5500") : Colors.Transparent;
     }
 }

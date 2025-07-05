@@ -7,28 +7,24 @@ using System.Net.Http.Json;
 
 namespace SneakersShop.Services
 {
-    internal class UserService : BaseService
+    public class UserService : BaseService
     {
-        private class TokenResponse
-        {
-            public string? Token { get; set; }
-        }
+        private readonly HttpService _httpService = new();
 
-        public async Task<LoginModel> Login(string username, string password)
+        public async Task<LoginModel> Login(AuthModel authModel)
         {
-            var payload = new { username, password };
-            var response = await _httpClient.PostAsJsonAsync("api/auth", payload);
+            var response = await _httpClient.PostAsJsonAsync("api/auth?revokeOld=false", authModel);
 
             if (response.StatusCode == HttpStatusCode.UnprocessableEntity)
                 throw new UserFriendlyException("Neispravni podaci za prijavu. Proverite korisničko ime i lozinku.", HttpStatusCode.UnprocessableEntity);
 
             ExceptionHelper.ThrowIfUnsuccessful(response);
 
-            var tokenData = await response.Content.ReadFromJsonAsync<TokenResponse>();
-            if (tokenData?.Token == null)
+            var tokenData = await response.Content.ReadFromJsonAsync<TokenResponseModel>();
+            if (tokenData?.AccessToken == null)
                 throw new UserFriendlyException("Došlo je do greške pri prijavi. Pokušajte ponovo.", HttpStatusCode.InternalServerError);
 
-            var claims = new JwtSecurityTokenHandler().ReadJwtToken(tokenData.Token);
+            var claims = new JwtSecurityTokenHandler().ReadJwtToken(tokenData.AccessToken);
             var userIdClaim = claims.Claims.FirstOrDefault(c => c.Type == "Id");
             var expClaim = claims.Claims.FirstOrDefault(c => c.Type == "exp");
 
@@ -38,7 +34,8 @@ namespace SneakersShop.Services
             return new LoginModel
             {
                 Id = int.Parse(userIdClaim.Value),
-                Token = tokenData.Token,
+                AccessToken = tokenData.AccessToken,
+                RefreshToken = tokenData.RefreshToken,
                 LoginExparation = double.Parse(expClaim.Value).ToDateTime()
             };
         }
@@ -57,9 +54,8 @@ namespace SneakersShop.Services
             var user = await SecureStorage.Default.GetUser();
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"api/users/{id}");
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", user.Token);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpService.SendWithAutoRefresh(request);
 
             ExceptionHelper.ThrowIfUnsuccessful(response);
 
@@ -80,13 +76,11 @@ namespace SneakersShop.Services
                 Content = JsonContent.Create(userUpdate)
             };
 
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", user.Token);
-
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpService.SendWithAutoRefresh(request);
 
             ExceptionHelper.ThrowIfUnsuccessful(response);
 
             return response.StatusCode == HttpStatusCode.NoContent || response.StatusCode == HttpStatusCode.OK;
-        }
+        }        
     }
 }

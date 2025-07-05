@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using SneakersShop.Components;
+using SneakersShop.Helpers;
 using SneakersShop.MVVM.Models;
 using SneakersShop.Services;
 using SneakersShop.Validators;
@@ -11,47 +12,36 @@ namespace SneakersShop.MVVM.ViewModels
 {
     public partial class LoginViewModel : ObservableObject
     {
-        private readonly LoginViewModelValidator _validator = new();
-        private readonly UserService _userService = new();
+        private readonly UserService _userService;
+        private readonly LoginViewModelValidator _validator;
+
+        public BindableField<string> Username { get; set; } = new();
+        public BindableField<string> Password { get; set; } = new();
 
         [ObservableProperty]
-        private string? username = "john_doe";
-        [ObservableProperty]
-        private string? usernameError;
-        public bool UsernameHasError => !string.IsNullOrEmpty(UsernameError);
-
-        [ObservableProperty]
-        private string? password = "sifra123";
-        [ObservableProperty]
-        private string? passwordError;
-        public bool PasswordHasError => !string.IsNullOrEmpty(PasswordError);
-
-        partial void OnUsernameChanged(string? value)
-        {
-            Validate();
-            OnPropertyChanged(nameof(UsernameHasError));
-        }
-        partial void OnPasswordChanged(string? value)
-        {
-            Validate();
-            OnPropertyChanged(nameof(PasswordHasError));
-        }
+        private bool isLoginbuttonEnabled = false;
 
         public LoginViewModel()
         {
             _userService = new();
             _validator = new();
 
-            UsernameError = string.Empty;
-            PasswordError = string.Empty;
+            Username.ValueChanged += (_)  => Validate();
+            Password.ValueChanged += (_) => Validate();
         }
-
+        
         private void Validate()
         {
             var result = _validator.Validate(this);
 
-            UsernameError = result.Errors.FirstOrDefault(x => x.PropertyName == nameof(Username))?.ErrorMessage ?? string.Empty;
-            PasswordError = result.Errors.FirstOrDefault(x => x.PropertyName == nameof(Password))?.ErrorMessage ?? string.Empty;
+           
+            IsLoginbuttonEnabled = result.IsValid;
+
+            
+            Username.Error = result.Errors.FirstOrDefault(x => x.PropertyName.Contains("Username"))?.ErrorMessage ?? string.Empty;
+
+            Password.Error = result.Errors.FirstOrDefault(x => x.PropertyName.Contains("Password"))?.ErrorMessage ?? string.Empty;
+            
         }
 
         [RelayCommand]
@@ -59,22 +49,21 @@ namespace SneakersShop.MVVM.ViewModels
         {
             try
             {
-                if (string.IsNullOrEmpty(Username))
+                var auth = new AuthModel
                 {
-                    throw new Exception("Korisničko ime je obavezno polje.");
-                }
+                    Username = Username.Value,
+                    Password = Password.Value,
+                    DeviceInfo = await DeviceInfoHelper.GetDeviceInfoAsync()
+                };
 
-                if (string.IsNullOrEmpty(Password))
-                {
-                    throw new Exception("Lozinka je obavezno polje.");
-                }
-
-                LoginModel loginModel = await _userService.Login(Username, Password);
-                
+                LoginModel loginModel = await _userService.Login(auth);
 
                 if (loginModel != null)
                 {
                     await SecureStorage.Default.SetAsync("user", JsonConvert.SerializeObject(loginModel));
+
+                    var cartItemsFromServer = await CartService.Instance.Get();
+                    CartService.Instance.LoadFromServer(cartItemsFromServer);
 
                     if (Application.Current != null)
                     {
@@ -85,7 +74,7 @@ namespace SneakersShop.MVVM.ViewModels
             catch (Exception ex)
             {
                 var popup = new MessagePopup("Greška", ex.Message);
-                var result = await App.Current.MainPage.ShowPopupAsync(popup);
+                await App.Current.MainPage.ShowPopupAsync(popup);
             }
         }
     }

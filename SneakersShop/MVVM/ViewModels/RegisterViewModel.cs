@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SneakersShop.Components;
+using SneakersShop.Helpers;
 using SneakersShop.MVVM.Models;
 using SneakersShop.MVVM.Views;
 using SneakersShop.Services;
@@ -17,127 +18,74 @@ namespace SneakersShop.MVVM.ViewModels
         [ObservableProperty]
         private bool nextStepVisible = false;
 
-        #region RegisterField
         [ObservableProperty]
-        private string firstName = string.Empty;
-        [ObservableProperty]
-        private string? firstNameError;
-        public bool FirstNameHasError => !string.IsNullOrEmpty(FirstNameError);
-
-        [ObservableProperty]
-        private string lastName = string.Empty;
-        [ObservableProperty]
-        private string? lastNameError;
-        public bool LastNameHasError => !string.IsNullOrEmpty(LastNameError);
-
-        [ObservableProperty]
-        private string email = string.Empty;
-        [ObservableProperty]
-        private string? emailError;
-        public bool EmailHasError => !string.IsNullOrEmpty(EmailError);
-
-        [ObservableProperty]
-        private string username = string.Empty;
-        [ObservableProperty]
-        private string? usernameError;
-        public bool UsernameHasError => !string.IsNullOrEmpty(UsernameError);
-
-        [ObservableProperty]
-        private string password = string.Empty;
-        [ObservableProperty]
-        private string? passwordError;
-        public bool PasswordHasError => !string.IsNullOrEmpty(PasswordError);
-
-        [ObservableProperty]
-        private string phone = string.Empty;
-        [ObservableProperty]
-        private string? phoneError;
-        public bool PhoneHasError => !string.IsNullOrEmpty(PhoneError);
-
-        [ObservableProperty]
-        private string? image = string.Empty;
-        [ObservableProperty]
-        private string? imageName;
-        #endregion
+        private bool isNextStepEnabled = false;
 
         [ObservableProperty]
         private bool isRegisterButtonEnabled = false;
+
+        [ObservableProperty]
+        private ImageSource displayedImageSource = ImageSource.FromUri(new Uri($"{AppConstants.IMAGE_URL}/images/profile/default.webp"));
+
+        [ObservableProperty]
+        private string image;
+
+        public BindableField<string> FirstName { get; set; } = new();
+        public BindableField<string> LastName { get; set; } = new();
+        public BindableField<string> Email { get; set; } = new();   
+        public BindableField<string> Username { get; set; } = new();
+        public BindableField<string> Password { get; set; } = new();
+        public BindableField<string> Phone { get; set; } = new();
 
         public RegisterViewModel()
         {
             _userService = new();
             _validator = new();
 
-            FirstNameError = string.Empty;
-            LastNameError = string.Empty;
-            EmailError = string.Empty;
-            UsernameError = string.Empty;
-            PasswordError = string.Empty;
-            PhoneError = string.Empty;
+            FirstName.ValueChanged += (_) => ValidateStepOne();
+            LastName.ValueChanged += (_) => ValidateStepOne();
+            Phone.ValueChanged += (_) => ValidateStepOne();
+            Email.ValueChanged += (_) => ValidateStepTwo();
+            Username.ValueChanged += (_) => ValidateStepTwo();
+            Password.ValueChanged += (_) => ValidateStepTwo();
+
         }
 
-        #region OnChanged
-        partial void OnFirstNameChanged(string value)
+        private void ValidateStepOne()
         {
-            Validate();
-            OnPropertyChanged(nameof(FirstNameHasError));
+            var errors = _validator.Validate(this).Errors;
+
+            var relevatErrors = errors.Where(x =>
+                x.PropertyName.Contains("FirstName") ||
+                x.PropertyName.Contains("LastName") ||
+                x.PropertyName.Contains("Phone")).ToList();
+
+            IsNextStepEnabled = relevatErrors.Count == 0;
+
+            FirstName.Error = relevatErrors.FirstOrDefault(x => x.PropertyName.Contains("FirstName"))?.ErrorMessage ?? "";
+
+            LastName.Error = relevatErrors.FirstOrDefault(x => x.PropertyName.Contains("LastName"))?.ErrorMessage ?? "";
+
+            Phone.Error = relevatErrors.FirstOrDefault(x => x.PropertyName.Contains("Phone"))?.ErrorMessage ?? "";
         }
 
-        partial void OnLastNameChanged(string value)
+        private void ValidateStepTwo()
         {
-            Validate();
-            OnPropertyChanged(nameof(LastNameHasError));
-        }
+           
+            var errors = _validator.Validate(this).Errors;
 
-        partial void OnEmailChanged(string value)
-        {
-            Validate();
-            OnPropertyChanged(nameof(EmailHasError));
-        }
+            var relevatErrors = errors.Where(x =>
+                x.PropertyName.Contains("Email") ||
+                x.PropertyName.Contains("Username") ||
+                x.PropertyName.Contains("Password")).ToList();
 
-        partial void OnUsernameChanged(string value)
-        {
-            Validate();
-            OnPropertyChanged(nameof(UsernameHasError));
-        }
+            IsRegisterButtonEnabled = !relevatErrors.Any();
 
-        partial void OnPasswordChanged(string value)
-        {
-            Validate();
-            OnPropertyChanged(nameof(PasswordHasError));
-        }
+            Email.Error = relevatErrors.FirstOrDefault(x => x.PropertyName.Contains("Email"))?.ErrorMessage ?? "";
 
-        partial void OnPhoneChanged(string value)
-        {
-            Validate();
-            OnPropertyChanged(nameof(PhoneHasError));
-        }
-        #endregion
+            Username.Error = relevatErrors.FirstOrDefault(x => x.PropertyName.Contains("Username"))?.ErrorMessage ?? "";
 
-        private void Validate()
-        {
-            try
-            {
-                var result = _validator.Validate(this);
-
-                IsRegisterButtonEnabled = result.IsValid;
-
-                FirstNameError = result.Errors.FirstOrDefault(x => x.PropertyName.Contains("FirstName"))?.ErrorMessage ?? "";
-
-                LastNameError = result.Errors.FirstOrDefault(x => x.PropertyName.Contains("LastName"))?.ErrorMessage ?? "";
-
-                EmailError = result.Errors.FirstOrDefault(x => x.PropertyName.Contains("Email"))?.ErrorMessage ?? "";
-
-                UsernameError = result.Errors.FirstOrDefault(x => x.PropertyName.Contains("Username"))?.ErrorMessage ?? "";
-
-                PasswordError = result.Errors.FirstOrDefault(x => x.PropertyName.Contains("Password"))?.ErrorMessage ?? "";
-
-                PhoneError = result.Errors.FirstOrDefault(x => x.PropertyName.Contains("Phone"))?.ErrorMessage ?? "";
-            }
-            finally
-            {
-                IsRegisterButtonEnabled = true;
-            }
+            Password.Error = relevatErrors.FirstOrDefault(x => x.PropertyName.Contains("Password"))?.ErrorMessage ?? "";           
         }
 
         [RelayCommand]
@@ -159,18 +107,21 @@ namespace SneakersShop.MVVM.ViewModels
                         await Application.Current.MainPage.ShowPopupAsync(popup);
                     return;
                 }
-                
+
 
                 using var stream = await result.OpenReadAsync();
                 using var memoryStream = new MemoryStream();
                 await stream.CopyToAsync(memoryStream);
                 Image = Convert.ToBase64String(memoryStream.ToArray());
+
+                DisplayedImageSource = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(Image)));
+                OnPropertyChanged(nameof(DisplayedImageSource));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var popup = new MessagePopup("Greška", ex.Message);
-                
-                if(Application.Current != null && Application.Current.MainPage != null)
+                var popup = new MessagePopup("Greška", "Greška prilikom dohvatanja slike. Molimo pokušajte kasnije ili proverite da li je slika jpg ili png.");
+
+                if (Application.Current != null && Application.Current.MainPage != null)
                     await Application.Current.MainPage.ShowPopupAsync(popup);
             }
         }
@@ -182,12 +133,12 @@ namespace SneakersShop.MVVM.ViewModels
             {
                 var user = new RegisterModel
                 {
-                    FirstName = FirstName,
-                    LastName = LastName,
-                    Email = Email,
-                    Username = Username,
-                    Password = Password,
-                    Phone = Phone,
+                    FirstName = FirstName.Value,
+                    LastName = LastName.Value,
+                    Email = Email.Value,
+                    Username = Username.Value,
+                    Password = Password.Value,
+                    Phone = Phone.Value,
                     Image = Image
                 };
 

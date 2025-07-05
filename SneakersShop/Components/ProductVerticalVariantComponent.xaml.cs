@@ -1,9 +1,13 @@
+using SneakersShop.Helpers;
 using SneakersShop.MVVM.Views;
+using SneakersShop.Services;
 
 namespace SneakersShop.Components;
 
 public partial class ProductVerticalVariantComponent : ContentView
 {
+    private readonly ProductService _productService = new();
+
     public static readonly BindableProperty ImageProperty =
        BindableProperty.Create(nameof(Image), typeof(string), typeof(ProductVerticalVariantComponent), "");
 
@@ -132,6 +136,20 @@ public partial class ProductVerticalVariantComponent : ContentView
 
     private async void Product_TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
-        await Navigation.PushAsync(new ProductPage(ProductId));
+        try
+        {
+            var product = await _productService.Get(ProductId);
+            if (product != null)
+            {
+                await LastCheckedProductsCache.SaveLastCheckedProducts(product);
+            }
+
+            await Navigation.PushAsync(new ProductPage(ProductId));
+        }
+        catch (Exception)
+        {
+
+            await Navigation.PushAsync(new ProductPage(ProductId));
+        }
     }
 }

@@ -25,7 +25,6 @@ namespace SneakersShop.Services
             var user = await SecureStorage.Default.GetUser();
 
             var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", user.Token);
 
             var response = await _httpClient.SendAsync(request);
 

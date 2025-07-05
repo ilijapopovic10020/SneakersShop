@@ -16,7 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converter:InverseBooleanConverter x:Key="InverseBooleanConverter" />
-            <converter:RatingWidthConverter x:Key="RatingWidthConverter" />
+            <!--<converter:RatingWidthConverter x:Key="RatingWidthConverter" />-->
             <converter:BooleanToStarConverter x:Key="BooleanToStarConverter" />
             <converter:Base64ToImageConverter x:Key="Base64ToImageConverter" />
         </ResourceDictionary>

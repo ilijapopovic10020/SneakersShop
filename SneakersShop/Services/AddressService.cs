@@ -8,35 +8,29 @@ namespace SneakersShop.Services
 {
     public class AddressService : BaseService
     {
+        private readonly HttpService _httpService = new();
         public async Task<IEnumerable<AddressModel>> Get()
         {
-            var user = await SecureStorage.Default.GetUser();
-
             var request = new HttpRequestMessage(HttpMethod.Get, "api/addresses");
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", user.Token);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpService.SendWithAutoRefresh(request);
             ExceptionHelper.ThrowIfUnsuccessful(response);
 
             var content = await response.Content.ReadFromJsonAsync<IEnumerable<AddressModel>>();
 
-            if (content == null)
-                throw new UserFriendlyException("Nije moguće učitati adrese.", HttpStatusCode.BadRequest);
-
-            return content;
+            return content == null ? 
+                throw new UserFriendlyException("Nije moguće učitati adrese.", HttpStatusCode.BadRequest) 
+                : content;
         }
 
         public async Task<bool> Post(CreateAddressModel address)
         {
-            var user = await SecureStorage.Default.GetUser();
-
             var request = new HttpRequestMessage(HttpMethod.Post, "api/addresses")
             {
                 Content = JsonContent.Create(address)
             };
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", user.Token);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpService.SendWithAutoRefresh(request);
 
             ExceptionHelper.ThrowIfUnsuccessful(response);
 
@@ -45,16 +39,12 @@ namespace SneakersShop.Services
 
         public async Task<bool> Update(int id, UpdateAddressModel model)
         {
-            var user = await SecureStorage.Default.GetUser();
-
             var request = new HttpRequestMessage(HttpMethod.Put, $"api/addresses/{id}")
             {
                 Content = JsonContent.Create(model)
             };
 
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", user.Token);
-
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpService.SendWithAutoRefresh(request);
 
             ExceptionHelper.ThrowIfUnsuccessful(response);
 
@@ -64,17 +54,13 @@ namespace SneakersShop.Services
 
         public async Task<bool> Delete(int id)
         {
-            var user = await SecureStorage.Default.GetUser();
-
             var request = new HttpRequestMessage(HttpMethod.Delete, $"api/addresses/{id}");
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", user.Token);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpService.SendWithAutoRefresh(request);
 
             ExceptionHelper.ThrowIfUnsuccessful(response);
 
             return response.StatusCode == HttpStatusCode.NoContent || response.IsSuccessStatusCode;
-
         }
 
     }

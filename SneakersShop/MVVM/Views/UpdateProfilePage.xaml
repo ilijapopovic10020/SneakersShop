@@ -57,15 +57,6 @@
                         VerticalOptions="Center"
                         WidthRequest="140">
                         <Image Aspect="AspectFill" Source="{Binding DisplayedImageSource}" />
-                        <!--<Image Aspect="AspectFill">
-                            <Image.Source>
-                                <Binding Converter="{StaticResource Base64ToImageConverter}" Path="Image">
-                                    <Binding.FallbackValue>
-                                        <UriImageSource Uri="{Binding User.FullImageUrl}" />
-                                    </Binding.FallbackValue>
-                                </Binding>
-                            </Image.Source>
-                        </Image>-->
                     </Border>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding PickImageCommand}" />

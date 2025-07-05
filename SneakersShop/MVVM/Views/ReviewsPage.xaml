@@ -111,7 +111,7 @@
                                     CornerRadius="20"
                                     HeightRequest="10"
                                     HorizontalOptions="Start"
-                                    WidthRequest="{Binding ., Converter={StaticResource RatingWidthConverter}, ConverterParameter=5}" />
+                                    WidthRequest="{Binding RatingWidth[5]}" />
                                 <Label
                                     Grid.Column="2"
                                     FontSize="14"
@@ -145,7 +145,7 @@
                                     CornerRadius="20"
                                     HeightRequest="10"
                                     HorizontalOptions="Start"
-                                    WidthRequest="{Binding ., Converter={StaticResource RatingWidthConverter}, ConverterParameter=4}" />
+                                    WidthRequest="{Binding RatingWidth[4]}" />
                                 <Label
                                     Grid.Column="2"
                                     FontSize="14"
@@ -175,7 +175,7 @@
                                     CornerRadius="20"
                                     HeightRequest="10"
                                     HorizontalOptions="Start"
-                                    WidthRequest="{Binding ., Converter={StaticResource RatingWidthConverter}, ConverterParameter=3}" />
+                                    WidthRequest="{Binding RatingWidth[3]}" />
                                 <Label
                                     Grid.Column="2"
                                     FontSize="14"
@@ -201,7 +201,7 @@
                                     CornerRadius="20"
                                     HeightRequest="10"
                                     HorizontalOptions="Start"
-                                    WidthRequest="{Binding ., Converter={StaticResource RatingWidthConverter}, ConverterParameter=2}" />
+                                    WidthRequest="{Binding RatingWidth[2]}" />
                                 <Label
                                     Grid.Column="2"
                                     FontSize="14"
@@ -223,7 +223,7 @@
                                     CornerRadius="20"
                                     HeightRequest="10"
                                     HorizontalOptions="Start"
-                                    WidthRequest="{Binding ., Converter={StaticResource RatingWidthConverter}, ConverterParameter=1}" />
+                                    WidthRequest="{Binding RatingWidth[1]}" />
                                 <Label
                                     Grid.Column="2"
                                     FontSize="14"

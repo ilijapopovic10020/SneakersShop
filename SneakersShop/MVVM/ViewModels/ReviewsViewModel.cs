@@ -33,6 +33,9 @@ namespace SneakersShop.MVVM.ViewModels
         private Dictionary<int, int> ratingCounts = new() { { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 } };
 
         [ObservableProperty]
+        private Dictionary<int, double> ratingWidth = new() { { 1, 0.0 }, { 2, 0.0 }, { 3, 0.0 }, { 4, 0.0 }, { 5, 0.0 } };
+
+        [ObservableProperty]
         private int selectedRating;
 
         public ReviewsViewModel()
@@ -44,8 +47,10 @@ namespace SneakersShop.MVVM.ViewModels
 
         public int MaxRatingCount => RatingCounts?.Values.Max() ?? 1;
 
-        public double GetRatingBarWidth(int rating, double maxWidth = 150)
+        private double GetRatingBarWidth(int rating)
         {
+            double maxWidth = 150;
+
             if (RatingCounts == null || !RatingCounts.ContainsKey(rating) || MaxRatingCount == 0)
                 return 0;
 
@@ -88,14 +93,20 @@ namespace SneakersShop.MVVM.ViewModels
                     AvgReview = Math.Round(Reviews.Average(r => r.Rating), 2);
 
                     var counts = new Dictionary<int, int> { { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 } };
+
                     foreach (var review in reviews.Data)
                     {
-                        if (counts.ContainsKey(review.Rating))
-                            counts[review.Rating]++;
+                        if (counts.TryGetValue(review.Rating, out int value))
+                            counts[review.Rating] = ++value;
                     }
 
                     RatingCounts = counts;
                     OnPropertyChanged(nameof(MaxRatingCount));
+
+                    RatingWidth = counts.ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => GetRatingBarWidth(kvp.Key)
+                    );
                 }
 
             }

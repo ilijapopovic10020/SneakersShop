@@ -90,6 +90,9 @@
 	  <Compile Update="MVVM\Views\CreateAddressPage.xaml.cs">
 	    <DependentUpon>CreateAddressPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="MVVM\Views\CreateOrderPage.xaml.cs">
+	    <DependentUpon>CreateOrderPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="MVVM\Views\UpdateProfilePage.xaml.cs">
 	    <DependentUpon>UpdateProfilePage.xaml</DependentUpon>
 	  </Compile>
@@ -138,7 +141,7 @@
 	  <MauiXaml Update="MVVM\Views\FavoritePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="MVVM\Views\FinishOrderPage.xaml">
+	  <MauiXaml Update="MVVM\Views\CreateOrderPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="MVVM\Views\HomePage.xaml">

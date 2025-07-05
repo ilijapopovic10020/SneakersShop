@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using SneakersShop.Components;
 using SneakersShop.Helpers;
 using SneakersShop.MVVM.Models;
+using SneakersShop.MVVM.Models.Search;
 using SneakersShop.MVVM.Views;
 using SneakersShop.Services;
 using System.Collections.ObjectModel;
@@ -25,6 +26,12 @@ namespace SneakersShop.MVVM.ViewModels
 
         [ObservableProperty]
         private ObservableCollection<ReviewsModel> reviews;
+
+        [ObservableProperty]
+        private ObservableCollection<ProductModel> recent;
+
+        [ObservableProperty]
+        private bool isRecentVisible = false;
 
         [ObservableProperty]
         private bool isLoading = false;
@@ -61,6 +68,7 @@ namespace SneakersShop.MVVM.ViewModels
             Product = new ProductModel();
             Sizes = [];
             Reviews = [];
+            Recent = [];
         }
 
         [RelayCommand]
@@ -70,7 +78,8 @@ namespace SneakersShop.MVVM.ViewModels
             {
                 IsLoading = true;
 
-                Product = await _productService.Get(id);
+                if(Product.Id != id)
+                    Product = await _productService.Get(id);
 
                 if(Product.Sizes != null)
                     Sizes = [.. Product.Sizes];
@@ -93,6 +102,20 @@ namespace SneakersShop.MVVM.ViewModels
                 }
                 CurrentImageIndex = 0;
                 UpdateImageInidactor();
+                await LoadRecent();
+
+                var reviewSearch = new PagedSearchId
+                {
+                    Id = id,
+                    Page = 1,
+                    PerPage = 6,
+                };
+                var reviews = await _reviewService.Get(reviewSearch);
+
+                if (reviews != null && reviews.Data != null)
+                {
+                    Reviews = [.. reviews.Data];
+                }
             }
             catch (Exception)
             {
@@ -103,6 +126,27 @@ namespace SneakersShop.MVVM.ViewModels
             {
                 IsLoading = false;
             }
+        }
+
+        [RelayCommand]
+        private async Task ChangeVaraint(int id)
+        {
+            try
+            {
+
+                Product = await _productService.Get(id);
+
+                await LastCheckedProductsCache.SaveLastCheckedProducts(Product);
+
+                await LoadProduct(id);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
 
         [RelayCommand]
@@ -135,18 +179,18 @@ namespace SneakersShop.MVVM.ViewModels
         }
 
         [RelayCommand]
-        public async Task SelectSize(int id)
+        private async Task SelectSize(int id)
         {
             var size = Sizes.FirstOrDefault(x => x.Id == id);
 
             if (size == null) 
             {
-                await SnackbarHelper.ShowMessage("Došlo je do greske, molimo pokusajte ponovo");
+                await SnackbarHelper.ShowMessage("Došlo je do greške, molimo pokušajte ponovo.");
             }
             else
             {
-                foreach (var s in Sizes)
-                    s.IsSelected = false;
+                if(SelectedSize != null)
+                    SelectedSize.IsSelected = false;
 
                 size.IsSelected = true;
                 SelectedSize = size;
@@ -203,6 +247,22 @@ namespace SneakersShop.MVVM.ViewModels
             {
                 var popup = new MessagePopup("Greška", ex.Message);
                 var result = await App.Current.MainPage.ShowPopupAsync(popup);
+            }
+        }
+
+        private async Task LoadRecent()
+        {
+            var recent =  await LastCheckedProductsCache.GetLastCheckedProducts();
+
+            if (recent == null || recent.Count <= 0)
+            {
+                Recent = [];
+                IsRecentVisible = false;
+            }
+            else
+            {
+                Recent = [.. recent];
+                IsRecentVisible = true;
             }
         }
     }

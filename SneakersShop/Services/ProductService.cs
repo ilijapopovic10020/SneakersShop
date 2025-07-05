@@ -59,7 +59,7 @@ namespace SneakersShop.Services
             return products;
         }
 
-        public async Task<ProductModel> Get(int id)
+        public async Task<ProductModel> Get(int? id)
         {
             var endpoint = $"api/products/{id}";
 

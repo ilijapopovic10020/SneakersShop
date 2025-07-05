@@ -1,6 +1,7 @@
 using Microsoft.VisualBasic;
 using SneakersShop.MVVM.ViewModels;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace SneakersShop.MVVM.Views;
 
@@ -127,5 +128,21 @@ public partial class ProductPage : ContentPage
     private async void Reviews_TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
         await Navigation.PushAsync(new ReviewsPage(ViewModel.Product.Id));
+    }
+
+    private async void Size_TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    {
+        if (sender is Border border)
+        {
+            await border.ScaleTo(0.9, 100, Easing.CubicOut);
+
+            if (BindingContext is ProductViewModel vm && e.Parameter is int sizeId)
+            {
+                if (vm.SelectSizeCommand.CanExecute(sizeId))
+                    vm.SelectSizeCommand.Execute(sizeId);
+            }
+
+            await border.ScaleTo(1, 100, Easing.CubicIn);
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace SneakersShop.Data
 {
-    public class CachedProducts
+    public class CachedData
     {
         [PrimaryKey]
         public string CacheKey { get; set; }

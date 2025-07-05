@@ -23,9 +23,10 @@ namespace SneakersShop
             await ThemeManager.LoadAndApplySavedThemeAsync();
         }
 
-        protected async override void OnStart()            
+        protected async override void OnStart()
         {
             base.OnStart();
+
             try
             {
                 var user = await SecureStorage.Default.GetUser();
@@ -34,10 +35,23 @@ namespace SneakersShop
                 {
                     if (user.ShouldBeLoggedOut)
                     {
-                        SecureStorage.Default.Remove("user");
+                        var newAccessToken = await new HttpService().RefreshToken();
 
-                        if (Application.Current != null)
-                            Application.Current.MainPage = new WelcomePage();
+                        if (string.IsNullOrEmpty(newAccessToken))
+                        {
+                            SecureStorage.Default.Remove("user");
+
+                            if (Application.Current != null)
+                                Application.Current.MainPage = new WelcomePage();
+                        }
+                        else
+                        {
+                            var cartItemsFromServer = await CartService.Instance.Get();
+                            CartService.Instance.LoadFromServer(cartItemsFromServer);
+
+                            if (Application.Current != null)
+                                Application.Current.MainPage = new AppShell();                            
+                        }
                     }
                     else
                     {
@@ -53,10 +67,63 @@ namespace SneakersShop
                     if (Application.Current != null)
                         Application.Current.MainPage = new WelcomePage();
                 }
+
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine($"{e.Message}\n{e.InnerException?.Message}");
+                if (Application.Current != null)
+                    Application.Current.MainPage = new WelcomePage();
+            }
+        }
+
+        protected async override void OnResume()
+        {
+            base.OnResume();
+
+            try
+            {
+                var user = await SecureStorage.Default.GetUser();
+
+                if (user != null)
+                {
+                    if (user.ShouldBeLoggedOut)
+                    {
+                        var newAccessToken = await new HttpService().RefreshToken();
+
+                        if (string.IsNullOrEmpty(newAccessToken))
+                        {
+                            SecureStorage.Default.Remove("user");
+
+                            if (Application.Current != null)
+                                Application.Current.MainPage = new WelcomePage();
+                        }
+                        else
+                        {
+                            var cartItemsFromServer = await CartService.Instance.Get();
+                            CartService.Instance.LoadFromServer(cartItemsFromServer);
+
+                            if (Application.Current != null)
+                                Application.Current.MainPage = new AppShell();
+                        }
+                    }
+                    else
+                    {
+                        var cartItemsFromServer = await CartService.Instance.Get();
+                        CartService.Instance.LoadFromServer(cartItemsFromServer);
+
+                        if (Application.Current != null)
+                            Application.Current.MainPage = new AppShell();
+                    }
+                }
+                else
+                {
+                    if (Application.Current != null)
+                        Application.Current.MainPage = new WelcomePage();
+                }
+
+            }
+            catch
+            {
                 if (Application.Current != null)
                     Application.Current.MainPage = new WelcomePage();
             }
