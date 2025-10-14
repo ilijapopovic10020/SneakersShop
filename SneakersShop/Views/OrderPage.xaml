@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.OrderPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Title="Detalji Porudžbine"
+    x:DataType="viewmodel:OrderViewModel"
+    BackgroundColor="White"
+    Shell.TabBarIsVisible="False">
+    <Grid>
+        <ActivityIndicator
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center" />
+        <ScrollView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+            <VerticalStackLayout>
+                <ScrollView
+                    Padding="20,0"
+                    HeightRequest="200"
+                    HorizontalScrollBarVisibility="Never"
+                    Orientation="Horizontal"
+                    StyleClass="Elevation0">
+                    <CollectionView ItemsSource="{Binding Order.Items}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="15" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:OrderItemModel">
+                                <Image
+                                    Aspect="AspectFit"
+                                    HeightRequest="200"
+                                    Source="{Binding FullImageUrl}"
+                                    WidthRequest="170">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer CommandParameter="{Binding ProductColorId}" />
+                                    </Image.GestureRecognizers>
+                                </Image>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+                <VerticalStackLayout Padding="15,16">
+                    <HorizontalStackLayout Margin="0,0,0,15">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="24"
+                            Text="Porudžbina #" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="24"
+                            Text="{Binding Order.Id}" />
+                    </HorizontalStackLayout>
+                    <Grid Margin="10,0" RowDefinitions="auto,auto,auto">
+                        <Label FontSize="16" Text="Ukupno (bez dostave)" />
+                        <Label
+                            FontSize="16"
+                            HorizontalOptions="End"
+                            Text="{Binding Order.TotalPrice, StringFormat='{0:N2} RSD'}" />
+                        <Label
+                            Grid.Row="1"
+                            FontSize="16"
+                            Text="Cena dostave" />
+                        <Label
+                            Grid.Row="1"
+                            FontSize="16"
+                            HorizontalOptions="End"
+                            Text="0 RSD" />
+                        <Label
+                            Grid.Row="2"
+                            FontAttributes="Bold"
+                            FontSize="18"
+                            Text="Ukupna cena" />
+                        <Label
+                            Grid.Row="2"
+                            FontAttributes="Bold"
+                            FontSize="18"
+                            HorizontalOptions="End"
+                            Text="{Binding Order.TotalPrice, StringFormat='{0:N2} RSD'}" />
+                    </Grid>
+                    <BoxView
+                        Margin="0,20"
+                        HeightRequest="2"
+                        HorizontalOptions="Center"
+                        WidthRequest="350"
+                        Color="{StaticResource Gray100}" />
+                    <Label
+                        Margin="0,0,0,15"
+                        FontAttributes="Bold"
+                        FontSize="24"
+                        Text="Status Proudžbine" />
+                    <Grid WidthRequest="300">
+                        <BoxView
+                            BackgroundColor="LightGray"
+                            HeightRequest="5"
+                            HorizontalOptions="Start"
+                            WidthRequest="300" />
+                        <BoxView
+                            BackgroundColor="LightGray"
+                            HeightRequest="5"
+                            HorizontalOptions="Start"
+                            WidthRequest="{Binding WidthProgress}">
+                            <BoxView.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Offset="0.0" Color="#FF9E6F" />
+                                    <GradientStop Offset="0.5" Color="#FF7B40" />
+                                    <GradientStop Offset="1.0" Color="#FF5500" />
+                                </LinearGradientBrush>
+                            </BoxView.Background>
+                        </BoxView>
+
+                        <Border
+                            BackgroundColor="{Binding PendingColor}"
+                            HeightRequest="20"
+                            HorizontalOptions="Start"
+                            StrokeShape="RoundRectangle 15"
+                            StrokeThickness="0"
+                            VerticalOptions="Center"
+                            WidthRequest="20" />
+                        <Border
+                            BackgroundColor="{Binding ShippedColor}"
+                            HeightRequest="20"
+                            HorizontalOptions="Center"
+                            StrokeShape="RoundRectangle 15"
+                            StrokeThickness="0"
+                            VerticalOptions="Center"
+                            WidthRequest="20" />
+                        <Border
+                            BackgroundColor="{Binding DeliveredColor}"
+                            HeightRequest="20"
+                            HorizontalOptions="End"
+                            StrokeShape="RoundRectangle 15"
+                            StrokeThickness="0"
+                            VerticalOptions="Center"
+                            WidthRequest="20" />
+                    </Grid>
+                    <Grid>
+                        <Border
+                            Margin="20,15"
+                            Padding="8,16"
+                            BackgroundColor="{Binding Order.StatusColor}"
+                            HorizontalOptions="Start"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="0">
+                            <Label
+                                FontSize="16"
+                                Text="{Binding Order.OrderStatusDisplay}"
+                                VerticalOptions="Center" />
+                        </Border>
+                        <Label
+                            Margin="20,15"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            HorizontalOptions="End"
+                            Text="{Binding Order.EstimatedArrival}"
+                            VerticalOptions="Center" />
+                        <Label
+                            Margin="20,15"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            HorizontalOptions="End"
+                            Text="{Binding Order.ReceivedDate, StringFormat='{0:dd.MM.yyyy}'}"
+                            VerticalOptions="Center" />
+                    </Grid>
+                    <BoxView
+                        Margin="0,20"
+                        HeightRequest="2"
+                        HorizontalOptions="Center"
+                        WidthRequest="350"
+                        Color="{StaticResource Gray100}" />
+                    <Label
+                        Margin="0,0,0,15"
+                        FontAttributes="Bold"
+                        FontSize="24"
+                        Text="Adresa Dostave" />
+                    <Label FontSize="20" Text="{Binding Order.Street}" />
+                    <HorizontalStackLayout>
+                        <Label
+                            Margin="0,0,0,20"
+                            FontSize="20"
+                            Text="{Binding Order.City, StringFormat='{}{0}, '}" />
+                        <Label
+                            Margin="0,0,0,20"
+                            FontSize="20"
+                            Text="{Binding Order.ZipCode}" />
+                    </HorizontalStackLayout>
+                    <Button
+                        Style="{StaticResource PrimaryButton}"
+                        StyleClass="Elevation2"
+                        Text="Poništi porudžbinu" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

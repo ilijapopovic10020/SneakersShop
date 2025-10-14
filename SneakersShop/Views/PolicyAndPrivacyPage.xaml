@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.PolicyAndPrivacyPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Politika Privatnosti"
+    BackgroundColor="White"
+    Shell.TabBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="LineBreakMode" Value="WordWrap" />
+            <Setter Property="Margin" Value="0,4" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style x:Key="Heading1" TargetType="Label">
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="Margin" Value="0,8,0,4" />
+        </Style>
+        <Style x:Key="Heading2" TargetType="Label">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="Margin" Value="0,8,0,4" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <StackLayout Padding="16" Spacing="6">
+            <Label Text="Poslednje ažuriranje: 07. oktobra 2025." />
+
+
+            <!--  Sažetak  -->
+            <Label Text="Ova Politika privatnosti opisuje naša pravila i procedure u vezi prikupljanja, korišćenja i otkrivanja Vaših podataka kada koristite aplikaciju i objašnjava Vaša prava u vezi privatnosti." />
+
+
+            <!--  Sekcije  -->
+            <Label Style="{StaticResource Heading2}" Text="Tumačenje i definicije" />
+            <Label Text="Reči kojima počinju velika slova imaju značenja definisana u sledećim uslovima. Sledeće definicije imaju isto značenje bilo da se pojavljuju u jednini ili množini." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Definicije" />
+            <Label FontAttributes="Bold" Text="Neki od pojmova korišćenih u ovoj politici:" />
+            <Label Text="• Nalog — jedinstveni nalog kreiran za Vas radi pristupa našem servisu." />
+            <Label Text="• Aplikacija — Sneakers Shop, softverski program koji pruža Kompanija." />
+            <Label Text="• Kompanija — Dev Adriatic d.o.o., Bulevar Mihajla Pupina 10k, Novi Beograd, 11070 Beograd." />
+            <Label Text="• Lični podaci — bilo koja informacija koja se odnosi na identifikovanu ili prepoznatljivu fizičku osobu." />
+            <Label Text="• Usluga — odnosi se na Aplikaciju." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Prikupljanje i korišćenje Vaših ličnih podataka" />
+            <Label FontAttributes="Bold" Text="Tipovi podataka koji se prikupljaju" />
+            <Label Text="Lični podaci: prilikom korišćenja naše usluge, možemo Vas zamoliti da nam dostavite određene lično identifikacione podatke koji se mogu koristiti za kontakt ili identifikaciju. To može uključivati, ali nije ograničeno na:" />
+            <Label Text="• Email adresa" />
+            <Label Text="• Ime i prezime" />
+            <Label Text="• Broj telefona" />
+            <Label Text="• Adresa, država, poštanski broj, grad" />
+            <Label Text="• Podaci o upotrebi" />
+
+
+            <Label FontAttributes="Bold" Text="Podaci o upotrebi" />
+            <Label Text="Podaci o upotrebi se automatski prikupljaju tokom korišćenja aplikacije. Mogu uključivati IP adresu, tip i verziju pregledača, stranice koje posećujete, datum i vreme posete, vreme provedeno na stranici, jedinstvene identifikatore uređaja i druge dijagnostičke podatke." />
+
+
+            <Label FontAttributes="Bold" Text="Informacije prikupljene tokom korišćenja aplikacije" />
+            <Label Text="Za funkcionalnosti aplikacije, uz Vašu prethodnu saglasnost, možemo pristupiti fotografijama i kameri Vašeg uređaja." />
+            <Label Text="Ove informacije koristimo da bismo omogućili određene funkcije, poboljšali i prilagodili uslugu. Podaci mogu biti otpremljeni na server Kompanije ili provajdera usluga ili ostati na Vašem uređaju." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Korišćenje Vaših ličnih podataka" />
+            <Label FontAttributes="Bold" Text="Kompanija može koristiti lične podatke za sledeće svrhe:" />
+            <Label Text="• Za pružanje i održavanje usluge, uključujući praćenje upotrebe." />
+            <Label Text="• Za upravljanje Vašim nalogom i registracijom." />
+            <Label Text="• Za izvršenje ugovora o kupovini proizvoda ili usluga koje ste naručili putem servisa." />
+            <Label Text="• Da bismo Vas kontaktirali putem emaila, telefona, SMS-a ili push notifikacija u vezi sa ažuriranjima ili informacijama o usluzi." />
+            <Label Text="• Da Vam pružimo novosti, posebne ponude i informacije o proizvodima i uslugama sličnim onima za koje ste pokazali interes (osim ako ste se odjavili)." />
+            <Label Text="• Za obradu i upravljanje vašim zahtevima i podrškom." />
+            <Label Text="• Za poslovne transfere, analizu podataka i unapređenje usluge." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Zadržavanje Vaših podataka" />
+            <Label Text="Kompanija će čuvati Vaše lične podatke samo onoliko dugo koliko je potrebno za svrhe iz ove politike. Takođe možemo čuvati podatke o upotrebi radi interne analize — obično kraće, osim kada su potrebni zbog bezbednosti ili zakonskih obaveza." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Prenos Vaših ličnih podataka" />
+            <Label Text="Vaši podaci mogu biti obrađeni i van Vaše države. Slanjem podataka pristajete na takav prenos. Kompanija preduzima razumne korake da obezbedi bezbednost podataka prilikom prenosa." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Brisanje Vaših ličnih podataka" />
+            <Label Text="Imate pravo da zatražite brisanje podataka koje smo prikupili o Vama. Neki podaci možete izbrisati direktno kroz podešavanja naloga u aplikaciji, a za ostalo nas možete kontaktirati." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Otkrivanje Vaših podataka" />
+            <Label Text="Možemo deliti Vaše podatke sa provajderima usluga, povezanima licima i poslovnim partnerima, kao i u slučaju poslovnih transakcija (npr. spajanja ili prodaje). Takođe možemo otkriti podatke ako smo zakonski obavezani ili radi zaštite prava i sigurnosti." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Bezbednost Vaših podataka" />
+            <Label Text="Bezbednost Vaših podataka nam je važna, ali nijedan metod prenosa ili skladištenja preko interneta nije 100% siguran. Trudimo se da koristimo komercijalno prihvatljive mere zaštite, ali ne možemo garantovati apsolutnu bezbednost." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Privatnost dece" />
+            <Label Text="Naša usluga nije namenjena osobama mlađim od 13 godina i mi svesno ne prikupljamo lične podatke od dece mlađe od 13 godina. Ako saznate da je vaše dete dostavilo podatke bez roditeljskog pristanka, kontaktirajte nas radi uklanjanja podataka." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Linkovi ka drugim sajtovima" />
+            <Label Text="Naša usluga može sadržati linkove ka drugim sajtovima koje ne upravljamo. Preporučujemo da pročitate politike privatnosti tih sajtova." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Promene ove politike" />
+            <Label Text="Ova politika može biti povremeno ažurirana. Obavestićemo Vas objavom nove politike na ovoj stranici i, kada je moguće, putem emaila ili istaknutog obaveštenja u servisu." />
+
+
+            <Label Style="{StaticResource Heading2}" Text="Kontakt" />
+            <Label Text="Ako imate pitanja u vezi ove Politike privatnosti, možete nas kontaktirati:" />
+            <Label Text="Email: office@dev.adriatic.com" />
+            <Label Text="Telefon: +381 11 123 1234" />
+            <Label Text="Poštanska adresa: Bulevar Mihajla Pupina 10k, Novi Beograd, 11070 Beograd" />
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

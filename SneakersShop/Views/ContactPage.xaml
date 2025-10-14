@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.ContactPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Title="Kontakt"
+    BackgroundColor="White"
+    Shell.TabBarIsVisible="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <Label
+                FontAttributes="Bold"
+                FontSize="28"
+                HorizontalOptions="Center"
+                Text="Kontaktirajte nas" />
+
+            <Label
+                FontSize="16"
+                HorizontalTextAlignment="Center"
+                Text="Za sva pitanja, predloge ili saradnju, stojimo vam na raspolaganju." />
+
+            <Frame
+                Padding="15"
+                CornerRadius="12"
+                HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout Spacing="10">
+                        <Image
+                            HeightRequest="20"
+                            Source="phone.png"
+                            WidthRequest="20">
+                            <Image.Behaviors>
+                                <mct:IconTintColorBehavior TintColor="Black" />
+                            </Image.Behaviors>
+                        </Image>
+                        <Label FontSize="16" Text="Telefon: +381 11 123 1234" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10">
+                        <Image
+                            HeightRequest="20"
+                            Source="mail.png"
+                            WidthRequest="20">
+                            <Image.Behaviors>
+                                <mct:IconTintColorBehavior TintColor="Black" />
+                            </Image.Behaviors>
+                        </Image>
+                        <Label FontSize="16" Text="Email: contact@sneakers.shop.com" />
+                    </HorizontalStackLayout>
+
+
+                    <Grid ColumnDefinitions="auto, *">
+                        <Image
+                            HeightRequest="20"
+                            Source="map.png"
+                            VerticalOptions="Start"
+                            WidthRequest="20">
+                            <Image.Behaviors>
+                                <mct:IconTintColorBehavior TintColor="Black" />
+                            </Image.Behaviors>
+                        </Image>
+                        <Label
+                            Grid.Column="1"
+                            FontSize="16"
+                            LineBreakMode="WordWrap"
+                            Text="Adresa: Bulevar Mihajla Pupina 10k, Novi Beograd, 11070 Beograd" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="20"
+                Text="Naša lokacija" />
+
+            <WebView x:Name="Map" HeightRequest="320" />
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="20"
+                Text="Pošaljite nam poruku" />
+
+            <!--  ToDo !!! uranium i implementacija da se salje poruka ako me ne mrzi nemam to ni na serveru ili mozda cak preko maila mock neki jer firma ne postoji  -->
+            <material:TextField x:Name="nameEntry" Title="Ime i prezime" />
+            <material:TextField
+                x:Name="emailEntry"
+                Title="E-adresa"
+                Keyboard="Email" />
+            <material:EditorField x:Name="messageEditor" Title="Poruka" />
+
+
+            <Button
+                CornerRadius="10"
+                Style="{StaticResource PrimaryButton}"
+                Text="Pošalji"
+                TextColor="White" />
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

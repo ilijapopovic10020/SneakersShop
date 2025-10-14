@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.ReviewCreatePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helper="clr-namespace:SneakersShop.Helpers"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Title="ReviewsCreatePage"
+    Padding="8,16"
+    x:DataType="viewmodel:ReviewCreateViewModel"
+    BackgroundColor="White"
+    Shell.TabBarIsVisible="False">
+    <VerticalStackLayout Spacing="15" VerticalOptions="Center">
+        <Label
+            FontSize="24"
+            HorizontalOptions="Center"
+            Text="Kako bi ocenio/la?" />
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+            <CollectionView
+                HorizontalOptions="Center"
+                ItemsSource="{Binding Stars}"
+                SelectionMode="None">
+
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="5" Orientation="Horizontal" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="helper:StarsModel">
+                        <ImageButton
+                            Command="{Binding SetRatingCommand, Source={RelativeSource AncestorType={x:Type viewmodel:ReviewCreateViewModel}}}"
+                            CommandParameter="{Binding Index}"
+                            HeightRequest="34"
+                            Source="{Binding IsFilled, Converter={StaticResource BooleanToStarConverter}}"
+                            WidthRequest="34" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </HorizontalStackLayout>
+        <material:TextField
+            Title="Vaše mišljenje"
+            Style="{StaticResource PrimaryTextField}"
+            Text="{Binding Comment}" />
+        <Button
+            Command="{Binding CreateReviewCommand}"
+            FontAttributes="Bold"
+            Style="{StaticResource PrimaryButton}"
+            StyleClass="ElevatedButton"
+            Text="Kreiraj recenziju" />
+    </VerticalStackLayout>
+</ContentPage>

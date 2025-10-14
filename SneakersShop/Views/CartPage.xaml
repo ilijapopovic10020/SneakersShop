@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.CartPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    x:DataType="viewmodel:CartViewModel"
+    BackgroundColor="White"
+    Shell.NavBarIsVisible="False">
+    <Grid RowDefinitions="*, auto">
+        <ScrollView>
+            <VerticalStackLayout Padding="20">
+                <FlexLayout IsVisible="{Binding IsCartVisible}" JustifyContent="SpaceBetween">
+                    <material:CheckBox
+                        CornerRadius="30"
+                        IsChecked="{Binding IsAllSelected, Mode=TwoWay}"
+                        Text="Sve"
+                        Color="{StaticResource Primary}" />
+                    <Label
+                        FontSize="16"
+                        Text="{Binding CartQuantity, StringFormat='Vaša korpa ({0})'}"
+                        VerticalOptions="Center" />
+
+                    <Button
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Black},
+                                                          Dark={StaticResource White}}"
+                        Command="{Binding ClearCartItemsCommand}"
+                        Text="Obriši sve"
+                        TextColor="{AppThemeBinding Light={StaticResource White},
+                                                    Dark={StaticResource Black}}" />
+                </FlexLayout>
+                <Label
+                    FontSize="12"
+                    Text="Besplatna dostava i pravo na besplatan povraćaj"
+                    TextColor="{StaticResource Gray300}" />
+                <BoxView Margin="0,20" HeightRequest="1" />
+                <Label
+                    Margin="0,100"
+                    FontSize="18"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding IsCartVisible, Converter={StaticResource InverseBooleanConverter}}"
+                    Text="Vaša korpa je prazna."
+                    TextColor="{StaticResource Gray300}" />
+                <CollectionView IsVisible="{Binding IsCartVisible}" ItemsSource="{Binding CartItems}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:CartModel">
+                            <Grid ColumnDefinitions="auto,*">
+                                <material:CheckBox
+                                    CornerRadius="30"
+                                    IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                    Color="{StaticResource Primary}" />
+                                <Border
+                                    Grid.Column="1"
+                                    Padding="10"
+                                    BackgroundColor="#f6f6f6"
+                                    StrokeShape="RoundRectangle 20"
+                                    StrokeThickness="0">
+                                    <Grid ColumnDefinitions="100,*">
+                                        <Image
+                                            Grid.Row="0"
+                                            Aspect="AspectFit"
+                                            Source="{Binding Product.FullImageUrls[0]}" />
+                                        <Grid
+                                            Grid.Column="1"
+                                            RowDefinitions="*,*,*"
+                                            RowSpacing="5">
+                                            <FlexLayout
+                                                Grid.Row="0"
+                                                VerticalOptions="End"
+                                                Wrap="Wrap">
+                                                <Label
+                                                    FontAttributes="Bold"
+                                                    FontSize="16"
+                                                    Text="{Binding Product.Brand, StringFormat='{0} '}"
+                                                    TextColor="{StaticResource Primary}" />
+                                                <Label
+                                                    FontAttributes="Bold"
+                                                    FontSize="16"
+                                                    Text="{Binding Product.Name}"
+                                                    TextColor="Black" />
+                                            </FlexLayout>
+                                            <FlexLayout
+                                                Grid.Row="1"
+                                                JustifyContent="SpaceBetween"
+                                                VerticalOptions="Center">
+                                                <VerticalStackLayout>
+                                                    <Label
+                                                        FontAttributes="Bold"
+                                                        FontSize="14"
+                                                        IsVisible="{Binding Product.HasDiscount, Converter={StaticResource InverseBooleanConverter}}"
+                                                        Text="{Binding Product.OldPrice, StringFormat='{}{0:N2} RSD'}"
+                                                        TextColor="{StaticResource Primary}" />
+                                                    <Label
+                                                        FontAttributes="Bold"
+                                                        FontSize="14"
+                                                        IsVisible="{Binding Product.HasDiscount}"
+                                                        Text="{Binding Product.NewPrice, StringFormat='{}{0:N2} RSD'}"
+                                                        TextColor="{StaticResource Primary}" />
+                                                </VerticalStackLayout>
+                                                <HorizontalStackLayout Spacing="3">
+                                                    <Label
+                                                        FontSize="16"
+                                                        Text="{Binding Product.AvgRating, StringFormat='{}{0:0.0}'}"
+                                                        TextColor="Black"
+                                                        VerticalOptions="Center" />
+                                                    <Image
+                                                        HeightRequest="14"
+                                                        Source="star_filled.png"
+                                                        VerticalOptions="Center"
+                                                        WidthRequest="14" />
+                                                </HorizontalStackLayout>
+                                            </FlexLayout>
+                                            <FlexLayout Grid.Row="2" JustifyContent="SpaceBetween">
+                                                <HorizontalStackLayout>
+                                                    <Label
+                                                        FontSize="16"
+                                                        Text="{Binding Size.Number}"
+                                                        VerticalOptions="Center">
+                                                        <Label.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding SelectSizeCommand, Source={RelativeSource AncestorType={x:Type viewmodel:CartViewModel}}}" CommandParameter="{Binding}" />
+                                                        </Label.GestureRecognizers>
+                                                    </Label>
+                                                </HorizontalStackLayout>
+                                                <Border
+                                                    BackgroundColor="White"
+                                                    HeightRequest="33"
+                                                    StrokeShape="RoundRectangle 20">
+                                                    <Grid ColumnDefinitions="auto,auto,auto">
+                                                        <Border
+                                                            BackgroundColor="Black"
+                                                            HeightRequest="30"
+                                                            StrokeShape="RoundRectangle 15"
+                                                            StrokeThickness="0"
+                                                            WidthRequest="30">
+                                                            <Image Source="back.png" />
+                                                            <Border.GestureRecognizers>
+                                                                <TapGestureRecognizer Command="{Binding DecreaseQuantityCommand, Source={RelativeSource AncestorType={x:Type viewmodel:CartViewModel}}}" CommandParameter="{Binding Product.Id}" />
+                                                            </Border.GestureRecognizers>
+                                                        </Border>
+                                                        <Border
+                                                            Grid.Column="1"
+                                                            HeightRequest="30"
+                                                            StrokeThickness="0"
+                                                            WidthRequest="30">
+                                                            <Label
+                                                                FontAttributes="Bold"
+                                                                FontSize="16"
+                                                                HorizontalOptions="Center"
+                                                                Text="{Binding Quantity}"
+                                                                TextColor="{StaticResource Primary}"
+                                                                VerticalOptions="Center" />
+                                                        </Border>
+                                                        <Border
+                                                            Grid.Column="2"
+                                                            BackgroundColor="Black"
+                                                            HeightRequest="30"
+                                                            StrokeShape="RoundRectangle 15"
+                                                            StrokeThickness="0"
+                                                            WidthRequest="30">
+                                                            <Image Source="forward.png" />
+                                                            <Border.GestureRecognizers>
+                                                                <TapGestureRecognizer Command="{Binding IncreaseQuantityCommand, Source={RelativeSource AncestorType={x:Type viewmodel:CartViewModel}}}" CommandParameter="{Binding Product.Id}" />
+                                                            </Border.GestureRecognizers>
+                                                        </Border>
+                                                    </Grid>
+                                                </Border>
+                                            </FlexLayout>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Button
+            Margin="0,10"
+            BackgroundColor="{StaticResource Primary}"
+            Command="{Binding CheckoutCommand}"
+            CornerRadius="30"
+            FontSize="16"
+            IsVisible="{Binding IsCheckoutButtonVisible}"
+            StyleClass="ElevatedButton"
+            Text="{Binding TotalPrice, StringFormat='Završi kupovinu {0:N2} RSD'}"
+            TextColor="White"
+            VerticalOptions="End"
+            WidthRequest="350" />
+    </Grid>
+</ContentPage>

@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.ProductPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:card="clr-namespace:SneakersShop.Components.Cards"
+    xmlns:control="clr-namespace:SneakersShop.Controls"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Title="{Binding Product.Name}"
+    x:DataType="viewmodel:ProductViewModel"
+    BackgroundColor="White"
+    Shell.TabBarIsVisible="False">
+    <Grid>
+        <ActivityIndicator
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center" />
+        <ScrollView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Scrolled="ScrollView_Scrolled">
+            <VerticalStackLayout Spacing="20">
+                <Border StrokeShape="RoundRectangle 0,0,30,30" StrokeThickness="0">
+                    <Grid>
+                        <CarouselView
+                            BackgroundColor="#f6f6f6"
+                            HeightRequest="300"
+                            IsBounceEnabled="True"
+                            IsScrollAnimated="True"
+                            IsSwipeEnabled="True"
+                            ItemsSource="{Binding Product.FullImageUrls}"
+                            Loop="True"
+                            Position="{Binding CurrentImageIndex}">
+                            <CarouselView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Image Source="{Binding}" />
+                                </DataTemplate>
+                            </CarouselView.ItemTemplate>
+                        </CarouselView>
+                        <Border
+                            Margin="0,15,15,0"
+                            BackgroundColor="{StaticResource Gray100}"
+                            HeightRequest="40"
+                            HorizontalOptions="End"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="0"
+                            VerticalOptions="Start"
+                            WidthRequest="40">
+                            <Image
+                                Aspect="AspectFit"
+                                HeightRequest="30"
+                                Source="{Binding Product.FavoriteImage}">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding AddOrRemoveFavoriteCommand}" />
+                                </Image.GestureRecognizers>
+                                <Image.Behaviors>
+                                    <mct:IconTintColorBehavior TintColor="{StaticResource Primary}" />
+                                </Image.Behaviors>
+                            </Image>
+                        </Border>
+                    </Grid>
+                </Border>
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                    <Border StrokeShape="RoundRectangle 20" StrokeThickness="0">
+                        <Image
+                            HeightRequest="75"
+                            Source="{Binding PreviousImage}"
+                            WidthRequest="75" />
+                    </Border>
+                    <Border Stroke="{StaticResource Primary}" StrokeShape="RoundRectangle 20">
+                        <Image
+                            HeightRequest="75"
+                            Source="{Binding CurrentImage}"
+                            WidthRequest="75" />
+                    </Border>
+                    <Border StrokeShape="RoundRectangle 20" StrokeThickness="0">
+                        <Image
+                            HeightRequest="75"
+                            Source="{Binding NextImage}"
+                            WidthRequest="75" />
+                    </Border>
+                </HorizontalStackLayout>
+                <VerticalStackLayout Margin="8,15" Spacing="20">
+                    <VerticalStackLayout Margin="10,0">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="28"
+                            Text="{Binding Product.Brand}" />
+                        <Label FontSize="28" Text="{Binding Product.Name}" />
+                    </VerticalStackLayout>
+                    <Grid Margin="10,0">
+                        <HorizontalStackLayout>
+                            <VerticalStackLayout VerticalOptions="Center">
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    Text="{Binding Product.OldPrice, StringFormat='{}{0:N2} RSD'}"
+                                    TextColor="{Binding Product.TextColor}" />
+                                <BoxView
+                                    BackgroundColor="{StaticResource Primary}"
+                                    HeightRequest="1"
+                                    IsVisible="{Binding Product.HasDiscount}"
+                                    TranslationY="-10"
+                                    WidthRequest="110" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    IsVisible="{Binding Product.HasDiscount}"
+                                    Text="{Binding Product.NewPrice, StringFormat='{}{0:N2} RSD'}"
+                                    TextColor="{StaticResource Primary}" />
+                            </VerticalStackLayout>
+
+                            <BoxView
+                                Margin="5,0"
+                                Background="{StaticResource Gray200}"
+                                HeightRequest="36"
+                                VerticalOptions="Center"
+                                WidthRequest="1" />
+                            <Label
+                                Text="Uključujući PDV"
+                                TextColor="{StaticResource Gray500}"
+                                VerticalTextAlignment="Center" />
+                        </HorizontalStackLayout>
+                    </Grid>
+                    <HorizontalStackLayout VerticalOptions="Center">
+                        <control:RatingControl Amount="5" CurrentValue="{Binding Product.AvgRating}" />
+                        <Label
+                            Text="{Binding Product.ReviewCount, StringFormat='{}{0:(0)}'}"
+                            TextDecorations="Underline"
+                            VerticalOptions="Center" />
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToReviewsPageCommand}" />
+                        </HorizontalStackLayout.GestureRecognizers>
+                    </HorizontalStackLayout>
+                    <Label
+                        Margin="0,30,0,0"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        Text="Sve varijante" />
+                    <!--  All Variants  -->
+                    <CollectionView ItemsSource="{Binding Product.Variants}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:ProductVariantModel">
+                                <Border Stroke="{Binding BorderColor}" StrokeShape="RoundRectangle 10">
+                                    <Image
+                                        HorizontalOptions="Center"
+                                        Source="{Binding FullImageUrl}"
+                                        WidthRequest="60" />
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ChangeVaraintCommand, Source={RelativeSource AncestorType={x:Type viewmodel:ProductViewModel}}}" CommandParameter="{Binding Id}" />
+                                    </Border.GestureRecognizers>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <Label
+                    Margin="10,0"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    Text="Izaberite Veličinu" />
+                <!--  Sizes  -->
+                <CollectionView
+                    Margin="8,0"
+                    HorizontalOptions="Center"
+                    ItemsSource="{Binding Sizes}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout
+                            HorizontalItemSpacing="5"
+                            Orientation="Vertical"
+                            Span="5"
+                            VerticalItemSpacing="15" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:SizeModel">
+                            <Border
+                                BackgroundColor="#f6f6f6"
+                                HeightRequest="50"
+                                StrokeThickness="0"
+                                WidthRequest="70">
+                                <Label
+                                    FontSize="18"
+                                    HorizontalTextAlignment="Center"
+                                    Text="{Binding Number, StringFormat='{0:N1}'}"
+                                    TextColor="Black"
+                                    VerticalTextAlignment="Center" />
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="35" />
+                                </Border.StrokeShape>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectSizeCommand, Source={RelativeSource AncestorType={x:Type viewmodel:ProductViewModel}}}" CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Border.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding IsSelected}"
+                                        TargetType="Border"
+                                        Value="True">
+                                        <Setter Property="Background" Value="{StaticResource Primary}" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        Binding="{Binding IsSelected}"
+                                        TargetType="Border"
+                                        Value="False">
+                                        <Setter Property="Background" Value="#f6f6f6" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Grid Margin="10,0">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        IsVisible="{Binding IsReviewsVisible}"
+                        Text="Recenzije"
+                        VerticalOptions="Center" />
+                    <Label
+                        FontSize="14"
+                        HorizontalTextAlignment="End"
+                        IsVisible="{Binding IsReviewsVisible}"
+                        Text="vidi više"
+                        TextDecorations="Underline"
+                        VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToReviewsPageCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+                <!--  Latest reviews  -->
+                <ScrollView
+                    Margin="20,0,20,0"
+                    HorizontalScrollBarVisibility="Never"
+                    IsVisible="{Binding IsReviewsVisible}"
+                    Orientation="Horizontal">
+                    <CollectionView ItemsSource="{Binding Reviews}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="20" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:ReviewsModel">
+                                <Grid RowDefinitions="auto, auto">
+                                    <Border
+                                        Grid.Column="0"
+                                        BackgroundColor="White"
+                                        HeightRequest="40"
+                                        HorizontalOptions="Start"
+                                        StrokeShape="RoundRectangle 55"
+                                        TranslationY="20"
+                                        WidthRequest="40"
+                                        ZIndex="1">
+                                        <Border
+                                            Grid.Column="1"
+                                            HeightRequest="35"
+                                            HorizontalOptions="Center"
+                                            StrokeShape="RoundRectangle 50"
+                                            VerticalOptions="Center"
+                                            WidthRequest="35">
+                                            <Image Aspect="AspectFill" Source="{Binding FullImageUrl}" />
+                                        </Border>
+                                    </Border>
+                                    <Border
+                                        Grid.Row="1"
+                                        BackgroundColor="#e6e6e6"
+                                        StrokeShape="RoundRectangle 20"
+                                        StrokeThickness="0"
+                                        WidthRequest="350">
+                                        <Grid Margin="20" RowDefinitions="auto, auto, auto">
+                                            <Label
+                                                Grid.Row="0"
+                                                Padding="3,0"
+                                                Text="{Binding Username}"
+                                                TextColor="Black" />
+                                            <control:RatingControl
+                                                Grid.Row="1"
+                                                Amount="5"
+                                                CurrentValue="{Binding Rating}"
+                                                StarSize="18" />
+                                            <Label
+                                                Grid.Row="1"
+                                                FontSize="12"
+                                                HorizontalOptions="End"
+                                                Text="{Binding CreatedAt}"
+                                                TextColor="{StaticResource Gray600}" />
+                                            <Label
+                                                Grid.Row="2"
+                                                Margin="0,10,0,0"
+                                                Text="{Binding Comment}"
+                                                TextColor="Black" />
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+
+                <Label
+                    Margin="10,0"
+                    FontAttributes="Bold"
+                    FontSize="20"
+                    IsVisible="{Binding IsRecentVisible}"
+                    Text="Poslednje pogledano" />
+                <!--  Last checked  -->
+                <ScrollView
+                    Margin="10,20"
+                    HorizontalScrollBarVisibility="Never"
+                    IsVisible="{Binding IsRecentVisible}"
+                    Orientation="Horizontal">
+                    <CollectionView ItemsSource="{Binding Recent}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:ProductModel">
+                                <card:ProductCardVertical
+                                    Name="{Binding Name}"
+                                    AvgRating="{Binding AvgRating}"
+                                    Brand="{Binding Brand}"
+                                    CountReview="{Binding ReviewCount}"
+                                    HasDiscount="{Binding HasDiscount}"
+                                    Image="{Binding FullImageUrls[0]}"
+                                    NewPrice="{Binding NewPrice}"
+                                    OldPrice="{Binding OldPrice}"
+                                    ProductColorId="{Binding Id}"
+                                    TextColor="{Binding TextColor}" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+                <BoxView
+                    BackgroundColor="Transparent"
+                    HeightRequest="50"
+                    WidthRequest="0" />
+            </VerticalStackLayout>
+        </ScrollView>
+        <Border
+            x:Name="InitialAddToCart"
+            Padding="0,20"
+            BackgroundColor="#f6f6f6"
+            IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+            StrokeThickness="0"
+            VerticalOptions="End">
+            <VerticalStackLayout>
+                <Button
+                    Command="{Binding AddToCartCommand}"
+                    Opacity="1"
+                    Style="{StaticResource PrimaryButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Dodaj u korpu" />
+                <Button
+                    Command="{Binding BuyNowCommand}"
+                    Style="{StaticResource WhiteButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Kupi odmah" />
+            </VerticalStackLayout>
+        </Border>
+        <Border
+            x:Name="ScrolledAddToCart"
+            Margin="10"
+            BackgroundColor="Black"
+            HeightRequest="60"
+            HorizontalOptions="End"
+            IsVisible="False"
+            StrokeShape="RoundRectangle 30"
+            StrokeThickness="0"
+            VerticalOptions="End"
+            WidthRequest="60">
+            <Grid
+                x:Name="addToCartGrid"
+                Padding="10,0"
+                ColumnSpacing="10">
+                <Border
+                    x:Name="addToCart"
+                    Background="{StaticResource Primary}"
+                    HeightRequest="40"
+                    IsVisible="False"
+                    StrokeShape="RoundRectangle 30"
+                    StrokeThickness="0">
+                    <Label
+                        HorizontalOptions="Center"
+                        Text="Dodaj U Korpu"
+                        TextColor="White"
+                        VerticalOptions="Center" />
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddToCartCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border
+                    x:Name="buyNow"
+                    Grid.Column="1"
+                    Background="{StaticResource Primary}"
+                    HeightRequest="40"
+                    IsVisible="False"
+                    StrokeShape="RoundRectangle 30"
+                    StrokeThickness="0">
+                    <Label
+                        HorizontalOptions="Center"
+                        Text="Kupi Odmah"
+                        TextColor="White"
+                        VerticalOptions="Center" />
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BuyNowCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
+                <Image
+                    Grid.Column="2"
+                    HeightRequest="30"
+                    HorizontalOptions="Center"
+                    Source="shopping_cart.png"
+                    VerticalOptions="Center"
+                    WidthRequest="30">
+                    <Image.Behaviors>
+                        <mct:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
+                    </Image.Behaviors>
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="Show_Cart_Options_TapGestureRecognizer_Tapped" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.ProductsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:card="clr-namespace:SneakersShop.Components.Cards"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Padding="8,16"
+    x:DataType="viewmodel:ProductsViewModel"
+    BackgroundColor="White"
+    Shell.NavBarIsVisible="False">
+    <Grid RowDefinitions="auto, *" RowSpacing="20">
+        <ActivityIndicator
+            Grid.Row="1"
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center" />
+        <Border
+            Padding="8"
+            BackgroundColor="#f6f6f6"
+            IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+            StrokeShape="RoundRectangle 20"
+            StrokeThickness="0"
+            StyleClass="Elevation1">
+            <VerticalStackLayout Spacing="10">
+                <material:TextField
+                    Title="Pretraži"
+                    Icon="search_selected.png"
+                    Style="{StaticResource PrimaryTextField}"
+                    Text="{Binding Keyword}">
+                    <material:TextField.Attachments>
+                        <Button
+                            Margin="0,0,5,0"
+                            Command="{Binding SearchCommand}"
+                            FontSize="16"
+                            HeightRequest="34"
+                            Style="{StaticResource PrimaryButton}"
+                            Text="Pretraži"
+                            WidthRequest="105" />
+                    </material:TextField.Attachments>
+                </material:TextField>
+
+                <FlexLayout JustifyContent="SpaceAround">
+                    <Border
+                        BackgroundColor="White"
+                        HeightRequest="50"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0"
+                        WidthRequest="125">
+                        <Label
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding SelectedFilter.DisplayName}"
+                            VerticalTextAlignment="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ShowSortOptionsCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+
+                    <Border
+                        BackgroundColor="White"
+                        HeightRequest="50"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0"
+                        WidthRequest="125">
+                        <Label
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding SelectedCategory.Name}"
+                            VerticalTextAlignment="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ShowCategoryOptionsCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+
+                    <Border
+                        BackgroundColor="White"
+                        HeightRequest="50"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0"
+                        WidthRequest="50">
+                        <Image
+                            Aspect="AspectFit"
+                            Source="filter.png"
+                            WidthRequest="20">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Filters_TapGestureRecognizer_Tapped" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </Border>
+
+                </FlexLayout>
+            </VerticalStackLayout>
+        </Border>
+        <ScrollView
+            Grid.Row="1"
+            IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+            VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout>
+                <CollectionView ItemsSource="{Binding Products}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:ProductsModel">
+                            <card:ProductCardHorizontal
+                                Name="{Binding ProductName}"
+                                AvgRating="{Binding AvgRating}"
+                                Brand="{Binding Brand}"
+                                CountReview="{Binding ReviewCount}"
+                                HasDiscount="{Binding HasDiscount}"
+                                Image="{Binding Thumbnail}"
+                                NewPrice="{Binding NewPrice}"
+                                OldPrice="{Binding OldPrice}"
+                                ProductColorId="{Binding ProductColorId}"
+                                TextColor="{Binding TextColor}" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <FlexLayout
+                    Margin="15"
+                    IsVisible="{Binding IsPageinationAvailable}"
+                    JustifyContent="SpaceBetween"
+                    WidthRequest="150">
+                    <Button
+                        Command="{Binding PreviousPageCommand}"
+                        IsEnabled="{Binding IsPreviousPageAvailable}"
+                        Text="-" />
+                    <Label
+                        FontSize="24"
+                        Text="{Binding CurrentPage}"
+                        VerticalOptions="Center" />
+                    <Button
+                        Command="{Binding NextPageCommand}"
+                        IsEnabled="{Binding IsNextPageAvailable}"
+                        Text="+" />
+                </FlexLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

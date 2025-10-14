@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.ProfileUpdatePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Title="Izmeni nalog"
+    x:DataType="viewmodel:ProfileUpdateViewModel"
+    BackgroundColor="White"
+    Shell.TabBarIsVisible="False">
+    <Grid>
+        <VerticalStackLayout TranslationY="20" VerticalOptions="Center">
+            <Grid>
+                <Border
+                    Grid.Column="1"
+                    BackgroundColor="White"
+                    HeightRequest="150"
+                    HorizontalOptions="Center"
+                    StrokeShape="RoundRectangle 75"
+                    WidthRequest="150">
+                    <Border
+                        Grid.Column="1"
+                        HeightRequest="140"
+                        HorizontalOptions="Center"
+                        StrokeShape="RoundRectangle 70"
+                        VerticalOptions="Center"
+                        WidthRequest="140">
+                        <Image Aspect="AspectFill" Source="{Binding DisplayedImageSource}" />
+                    </Border>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding PickImageCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border
+                    Padding="5"
+                    BackgroundColor="White"
+                    HeightRequest="40"
+                    StrokeShape="RoundRectangle 20"
+                    TranslationX="60"
+                    TranslationY="-60"
+                    WidthRequest="40">
+                    <ImageButton
+                        HeightRequest="20"
+                        Source="edit.svg"
+                        WidthRequest="20">
+                        <ImageButton.Behaviors>
+                            <mct:IconTintColorBehavior TintColor="Black" />
+                        </ImageButton.Behaviors>
+                    </ImageButton>
+                </Border>
+            </Grid>
+            <VerticalStackLayout Margin="0,20,0,0" Spacing="15">
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Ime"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding FirstName.Value}" />
+                    <Label
+                        IsVisible="{Binding FirstName.HasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding FirstName.Error}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Prezime"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding LastName.Value}" />
+                    <Label
+                        IsVisible="{Binding LastName.HasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding LastName.Error}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="E-adresa"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding Email.Value}" />
+                    <Label
+                        IsVisible="{Binding Email.HasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding Email.Error}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <material:TextField
+                        Title="Broj Telefona"
+                        Style="{StaticResource PrimaryTextField}"
+                        Text="{Binding Phone.Value}" />
+                    <Label
+                        IsVisible="{Binding Phone.HasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding Phone.Error}" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+            <Button
+                Margin="0,10"
+                BackgroundColor="{StaticResource Primary}"
+                Command="{Binding UpdateUserCommand}"
+                CornerRadius="30"
+                FontSize="16"
+                StyleClass="ElevatedButton"
+                Text="Primeni promene"
+                TextColor="White"
+                WidthRequest="350" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

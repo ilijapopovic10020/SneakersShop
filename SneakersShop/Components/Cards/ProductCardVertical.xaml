@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="SneakersShop.Components.Cards.ProductCardVertical"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="VerticalCard">
+    <Border
+        BackgroundColor="#f6f6f6"
+        HeightRequest="300"
+        StrokeShape="RoundRectangle 20"
+        StrokeThickness="0"
+        WidthRequest="170">
+        <Grid RowDefinitions="150, 60, 90">
+            <Image
+                Aspect="AspectFill"
+                BindingContext="{x:Reference VerticalCard}"
+                HeightRequest="150"
+                Source="{Binding Image}"
+                VerticalOptions="Start" />
+            <VerticalStackLayout
+                Grid.Row="1"
+                Padding="8,0"
+                WidthRequest="170">
+                <Label
+                    BindingContext="{x:Reference VerticalCard}"
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    Text="{Binding Brand}" />
+                <Label
+                    BindingContext="{x:Reference VerticalCard}"
+                    FontSize="18"
+                    Text="{Binding Name}" />
+            </VerticalStackLayout>
+            <Grid
+                Grid.Row="2"
+                Margin="0,15,0,0"
+                Padding="8,0"
+                ColumnDefinitions="*,auto"
+                VerticalOptions="Start">
+                <Grid RowDefinitions="auto, auto">
+                    <Label
+                        Grid.Row="0"
+                        BindingContext="{x:Reference VerticalCard}"
+                        IsVisible="True"
+                        Text="{Binding OldPrice, StringFormat='{}{0:N2} RSD'}"
+                        TextColor="{Binding TextColor}" />
+                    <BoxView
+                        BackgroundColor="{StaticResource Primary}"
+                        BindingContext="{x:Reference VerticalCard}"
+                        HeightRequest="2"
+                        HorizontalOptions="Start"
+                        IsVisible="{Binding HasDiscount}"
+                        WidthRequest="70" />
+                    <Label
+                        Grid.Row="1"
+                        BindingContext="{x:Reference VerticalCard}"
+                        IsVisible="{Binding HasDiscount}"
+                        Text="{Binding NewPrice, StringFormat='{}{0:N2} RSD'}"
+                        TextColor="{StaticResource Primary}" />
+                </Grid>
+                <HorizontalStackLayout
+                    Grid.Column="1"
+                    HorizontalOptions="End"
+                    VerticalOptions="Start">
+                    <Label
+                        BindingContext="{x:Reference VerticalCard}"
+                        Text="{Binding AvgRating, StringFormat='{}{0:N2}'}"
+                        VerticalOptions="Center" />
+                    <Image HeightRequest="15" Source="star_filled.png" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Grid>
+        <Border.GestureRecognizers>
+            <TapGestureRecognizer Tapped="ProductDetail_TapGestureRecognizer_Tapped" />
+        </Border.GestureRecognizers>
+    </Border>
+</ContentView>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.AddressCreatePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Title="Kreiraj Adresu"
+    Padding="8,16"
+    x:DataType="viewmodel:AddressCreateViewModel"
+    BackgroundColor="White"
+    Shell.NavBarIsVisible="True"
+    Shell.TabBarIsVisible="False">
+    <VerticalStackLayout Spacing="20" VerticalOptions="Center">
+        <Label
+            FontAttributes="Bold"
+            FontSize="44"
+            HorizontalTextAlignment="Center"
+            Text="Kreiraj adresu" />
+        <VerticalStackLayout Spacing="20">
+            <material:TextField
+                Title="Ulica i broj"
+                AccentColor="Black"
+                CornerRadius="20"
+                Text="{Binding Street}"
+                WidthRequest="350" />
+
+            <material:PickerField
+                Title="Grad"
+                AccentColor="Black"
+                CornerRadius="20"
+                ItemDisplayBinding="{Binding Name}"
+                ItemsSource="{Binding Cities}"
+                SelectedItem="{Binding SelectedCity}"
+                WidthRequest="350" />
+            <Button
+                Command="{Binding CreateAddressCommand}"
+                Style="{StaticResource PrimaryButton}"
+                StyleClass="ElevatedButton"
+                Text="Potvrdi" />
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="SneakersShop.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:view="clr-namespace:SneakersShop.Views"
+    Title="SneakersShop"
+    Shell.FlyoutBehavior="Disabled">
+    <TabBar x:Name="bottomTabbar">
+        <ShellContent
+            ContentTemplate="{DataTemplate view:HomePage}"
+            Icon="home.png"
+            Route="HomePage" />
+
+        <ShellContent
+            ContentTemplate="{DataTemplate view:CartPage}"
+            Icon="shopping_cart.svg"
+            Route="CartPage" />
+
+        <ShellContent
+            ContentTemplate="{DataTemplate view:ProductsPage}"
+            Icon="search.svg"
+            Route="ProductsPage" />
+
+        <ShellContent
+            ContentTemplate="{DataTemplate view:ProfilePage}"
+            Icon="user.svg"
+            Route="ProfilePage" />
+    </TabBar>
+</Shell>

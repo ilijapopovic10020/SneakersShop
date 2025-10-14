@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.OrderSuccessPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="White"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False">
+    <Grid>
+        <Image Source="successful_purchase.jpg" VerticalOptions="End" />
+        <VerticalStackLayout Spacing="25" VerticalOptions="Center">
+            <VerticalStackLayout Grid.Row="0" WidthRequest="350">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="26"
+                    Text="Hvala na kupovini!"
+                    TextColor="{StaticResource Primary}" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="26"
+                    Text="Vaša porudžbina je uspešno kreirana." />
+            </VerticalStackLayout>
+            <Button
+                Margin="0,10"
+                BackgroundColor="{StaticResource Primary}"
+                Clicked="Back_To_Home_Button_Clicked"
+                CornerRadius="30"
+                FontSize="16"
+                StyleClass="ElevatedButton"
+                Text="Nazad na početnu"
+                TextColor="White"
+                WidthRequest="350" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

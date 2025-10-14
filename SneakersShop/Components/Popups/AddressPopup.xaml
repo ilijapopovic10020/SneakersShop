@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<popups:Popup
+    x:Class="SneakersShop.Components.Popups.AddressPopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:popups="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Color="Transparent">
+    <Border
+        Padding="20"
+        BackgroundColor="White"
+        StrokeShape="RoundRectangle 30"
+        WidthRequest="300">
+        <VerticalStackLayout Spacing="20">
+            <Label
+                FontSize="16"
+                HorizontalOptions="End"
+                Text="Dodaj novu adresu"
+                TextColor="{StaticResource Primary}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Add_New_TapGestureRecognizer_Tapped" />
+                </Label.GestureRecognizers>
+            </Label>
+            <CollectionView
+                ItemsSource="{Binding Addresses}"
+                SelectionChanged="CollectionView_SelectionChanged"
+                SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:AddressesModel">
+                        <Grid>
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem
+                                            BackgroundColor="LightBlue"
+                                            Clicked="Update_SwipeItem_Clicked"
+                                            Text="Izmeni" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Border
+                                    Margin="10"
+                                    Padding="25,5"
+                                    BackgroundColor="{Binding BackgroundColor}"
+                                    StrokeShape="RoundRectangle 20"
+                                    StrokeThickness="0"
+                                    StyleClass="Elevation1">
+                                    <StackLayout>
+                                        <Label
+                                            FontAttributes="Bold"
+                                            Text="{Binding Street}"
+                                            TextColor="{Binding TextColor}" />
+                                        <Label
+                                            FontSize="16"
+                                            Text="{Binding City}"
+                                            TextColor="{Binding TextColor}" />
+                                        <Label
+                                            FontSize="12"
+                                            Text="{Binding ZipCode}"
+                                            TextColor="{Binding TextColor}" />
+                                    </StackLayout>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup Name="CommonStates">
+                                            <VisualState Name="Normal" />
+                                            <VisualState Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="#FF5500" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </Border>
+                            </SwipeView>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Grid>
+                <Label
+                    FontSize="16"
+                    HorizontalOptions="Start"
+                    Text="Otka&#382;i"
+                    TextColor="Black">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="Cancel_TapGestureRecognizer_Tapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label
+                    FontSize="16"
+                    HorizontalOptions="End"
+                    Text="Potvrdi"
+                    TextColor="{StaticResource Primary}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="Accept_TapGestureRecognizer_Tapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+        </VerticalStackLayout>
+    </Border>
+</popups:Popup>

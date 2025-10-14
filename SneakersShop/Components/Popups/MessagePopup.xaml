@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<popups:Popup
+    x:Class="SneakersShop.Components.Popups.MessagePopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:popups="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+    CanBeDismissedByTappingOutsideOfPopup="False"
+    Color="Transparent">
+    <Border
+        Padding="20"
+        BackgroundColor="White"
+        StrokeShape="RoundRectangle 30"
+        WidthRequest="350">
+        <VerticalStackLayout Spacing="20">
+            <Label
+                FontAttributes="Bold"
+                FontSize="16"
+                Text="{Binding Title}"
+                TextColor="Black" />
+            <Label
+                FontSize="16"
+                Text="{Binding Message}"
+                TextColor="Black" />
+            <Label
+                FontSize="16"
+                HorizontalOptions="End"
+                Text="U redu"
+                TextColor="Black">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Cancel_TapGestureRecognizer_Tapped" />
+                </Label.GestureRecognizers>
+            </Label>
+        </VerticalStackLayout>
+    </Border>
+</popups:Popup>

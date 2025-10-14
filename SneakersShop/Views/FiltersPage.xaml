@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.FiltersPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Title="Filteri"
+    Padding="16,32"
+    x:DataType="viewmodel:FiltersViewModel"
+    BackgroundColor="White"
+    Shell.NavBarHasShadow="True"
+    Shell.TabBarIsVisible="False">
+    <VerticalStackLayout Spacing="20">
+        <!--  Price  -->
+        <Border
+            Padding="10"
+            BackgroundColor="{StaticResource PrimaryDark}"
+            StrokeShape="RoundRectangle 20"
+            StrokeThickness="0"
+            StyleClass="Elevation1">
+            <VerticalStackLayout Spacing="20">
+                <Label
+                    FontSize="18"
+                    HorizontalOptions="Start"
+                    Text="Cena"
+                    TextColor="{StaticResource Secondary}"
+                    VerticalOptions="Center" />
+                <HorizontalStackLayout Spacing="20">
+                    <Border HorizontalOptions="Center" StrokeThickness="0">
+                        <HorizontalStackLayout Spacing="15">
+                            <material:TextField
+                                Title="Min"
+                                AccentColor="White"
+                                BorderColor="{StaticResource Secondary}"
+                                Keyboard="Numeric"
+                                Text="{Binding MinPrice}"
+                                WidthRequest="120" />
+                            <material:TextField
+                                Title="Max"
+                                AccentColor="White"
+                                BorderColor="{StaticResource Secondary}"
+                                Keyboard="Numeric"
+                                Text="{Binding MaxPrice}"
+                                WidthRequest="120" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+
+        <!--  Brands  -->
+        <Border
+            Padding="5,10"
+            BackgroundColor="{StaticResource PrimaryDark}"
+            StrokeShape="RoundRectangle 20"
+            StrokeThickness="0"
+            StyleClass="Elevation1">
+            <VerticalStackLayout Spacing="20">
+                <Label
+                    FontSize="18"
+                    HorizontalOptions="Start"
+                    Text="Brand"
+                    TextColor="{StaticResource Secondary}" />
+                <CollectionView
+                    HorizontalOptions="Center"
+                    ItemsSource="{Binding Brands}"
+                    WidthRequest="350">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout
+                            HorizontalItemSpacing="10"
+                            Orientation="Vertical"
+                            Span="3"
+                            VerticalItemSpacing="10" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:BrandsModel">
+                            <material:CheckBox
+                                CornerRadius="5"
+                                IsChecked="{Binding IsSelected}"
+                                Text="{Binding Name}"
+                                TextColor="{StaticResource Gray600}"
+                                Color="White" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </Border>
+
+        <!--  Colors  -->
+        <Border
+            Padding="10"
+            BackgroundColor="{StaticResource PrimaryDark}"
+            StrokeShape="RoundRectangle 20"
+            StrokeThickness="0"
+            StyleClass="Elevation1">
+            <VerticalStackLayout Spacing="20">
+                <Label
+                    FontSize="18"
+                    HorizontalOptions="Start"
+                    Text="Boje"
+                    TextColor="{StaticResource Secondary}" />
+                <CollectionView ItemsSource="{Binding VisibleColors}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout
+                            HorizontalItemSpacing="10"
+                            Orientation="Vertical"
+                            Span="5"
+                            VerticalItemSpacing="20" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:ColorsModel">
+                            <material:CheckBox
+                                CornerRadius="5"
+                                IconColor="{StaticResource Primary}"
+                                IsChecked="{Binding IsSelected}"
+                                Text=""
+                                Color="{Binding Name}" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Button
+                    Margin="0,0,5,0"
+                    Command="{Binding ToggleColorVisibilityCommand}"
+                    FontSize="16"
+                    HorizontalOptions="End"
+                    IsVisible="{Binding IsShowingAllColors, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource WhiteButton}"
+                    Text="Više"
+                    WidthRequest="100" />
+                <Button
+                    Margin="0,0,5,0"
+                    Command="{Binding ToggleColorVisibilityCommand}"
+                    FontSize="16"
+                    HorizontalOptions="End"
+                    IsVisible="{Binding IsShowingAllColors}"
+                    Style="{StaticResource WhiteButton}"
+                    Text="Manje"
+                    WidthRequest="100" />
+            </VerticalStackLayout>
+        </Border>
+
+        <Button
+            Command="{Binding AppyFiltersCommand}"
+            Style="{StaticResource PrimaryButton}"
+            Text="Primeni filtere"
+            VerticalOptions="End" />
+    </VerticalStackLayout>
+</ContentPage>

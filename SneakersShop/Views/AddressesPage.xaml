@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.AddressesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:models="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Title="AddressesPage"
+    Padding="8,16"
+    x:DataType="viewmodel:AddressesViewModel"
+    BackgroundColor="White"
+    Shell.TabBarIsVisible="False">
+    <Grid>
+        <ActivityIndicator
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center"
+            Color="{StaticResource Primary}" />
+        <VerticalStackLayout HorizontalOptions="Center" IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+            <CollectionView ItemsSource="{Binding Addresses}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:AddressesModel">
+                        <Grid>
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem
+                                            BackgroundColor="{StaticResource PrimaryDark}"
+                                            Command="{Binding EditAddressCommand, Source={RelativeSource AncestorType={x:Type viewmodel:AddressesViewModel}}}"
+                                            CommandParameter="{Binding Id}"
+                                            Text="Izmeni" />
+                                        <SwipeItem
+                                            BackgroundColor="IndianRed"
+                                            Command="{Binding DeleteAddressCommand, Source={RelativeSource AncestorType={x:Type viewmodel:AddressesViewModel}}}"
+                                            CommandParameter="{Binding Id}"
+                                            Text="Obri&#353;i" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Border
+                                    Margin="10"
+                                    Padding="25,5"
+                                    BackgroundColor="{Binding BackgroundColor}"
+                                    HeightRequest="100"
+                                    StrokeShape="RoundRectangle 20"
+                                    StrokeThickness="0"
+                                    StyleClass="Elevation1">
+                                    <VerticalStackLayout VerticalOptions="Center">
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="18"
+                                            Text="{Binding Street}"
+                                            TextColor="{Binding TextColor}" />
+                                        <HorizontalStackLayout>
+                                            <Label
+                                                FontSize="16"
+                                                Text="{Binding City}"
+                                                TextColor="{Binding TextColor}"
+                                                VerticalOptions="End" />
+                                            <Label
+                                                FontSize="12"
+                                                Text=", "
+                                                TextColor="{Binding TextColor}"
+                                                VerticalOptions="End" />
+                                            <Label
+                                                FontSize="12"
+                                                Text="{Binding ZipCode}"
+                                                TextColor="{Binding TextColor}"
+                                                VerticalOptions="End" />
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </SwipeView>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+        <Border
+            Margin="20"
+            BackgroundColor="{StaticResource Primary}"
+            HeightRequest="60"
+            HorizontalOptions="End"
+            IsVisible="{Binding IsAddNewAddressVisible}"
+            StrokeShape="RoundRectangle 30"
+            StrokeThickness="0"
+            VerticalOptions="End"
+            WidthRequest="60">
+            <Label
+                FontSize="36"
+                HorizontalOptions="Center"
+                Text="+"
+                TextColor="White"
+                VerticalOptions="Center" />
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="Add_Address_TapGestureRecognizer_Tapped" />
+            </Border.GestureRecognizers>
+        </Border>
+    </Grid>
+</ContentPage>

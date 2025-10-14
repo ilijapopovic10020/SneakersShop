@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.CheckoutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Title="Završi porudžbinu"
+    x:DataType="viewmodel:CheckoutViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource White},
+                                      Dark={StaticResource Gray950}}"
+    Shell.TabBarIsVisible="False">
+    <Grid RowDefinitions="*, auto">
+        <ScrollView Grid.Row="0">
+            <Grid RowDefinitions="auto,auto,auto,auto,auto" RowSpacing="25">
+                <Border
+                    Grid.Row="1"
+                    Padding="10,0"
+                    BackgroundColor="{StaticResource Gray100}"
+                    HeightRequest="44"
+                    StrokeShape="RoundRectangle 30"
+                    StrokeThickness="0"
+                    WidthRequest="380">
+                    <Grid Padding="10" ColumnDefinitions="*,*">
+                        <Button
+                            x:Name="CardButton"
+                            Command="{Binding SelectPaymentCommand}"
+                            CommandParameter="{x:Static model:PaymentType.Card}"
+                            HeightRequest="35"
+                            Text="{Binding PaymentOptions[0].DisplayName}"
+                            TextColor="Black">
+                            <Button.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding SelectedPaymentType}"
+                                    TargetType="Button"
+                                    Value="{x:Static model:PaymentType.Card}">
+                                    <Setter Property="BackgroundColor" Value="White" />
+                                    <Setter Property="TextColor" Value="Black" />
+                                </DataTrigger>
+                                <DataTrigger
+                                    Binding="{Binding SelectedPaymentType}"
+                                    TargetType="Button"
+                                    Value="{x:Static model:PaymentType.COD}">
+                                    <Setter Property="BackgroundColor" Value="Transparent" />
+                                    <Setter Property="TextColor" Value="{StaticResource Gray400}" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+
+                        <Button
+                            x:Name="CodButton"
+                            Grid.Column="1"
+                            Command="{Binding SelectPaymentCommand}"
+                            CommandParameter="{x:Static model:PaymentType.COD}"
+                            HeightRequest="35"
+                            Text="{Binding PaymentOptions[1].DisplayName}">
+                            <Button.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding SelectedPaymentType}"
+                                    TargetType="Button"
+                                    Value="{x:Static model:PaymentType.COD}">
+                                    <Setter Property="BackgroundColor" Value="White" />
+                                    <Setter Property="TextColor" Value="Black" />
+                                </DataTrigger>
+                                <DataTrigger
+                                    Binding="{Binding SelectedPaymentType}"
+                                    TargetType="Button"
+                                    Value="{x:Static model:PaymentType.Card}">
+                                    <Setter Property="BackgroundColor" Value="Transparent" />
+                                    <Setter Property="TextColor" Value="{StaticResource Gray400}" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <VerticalStackLayout
+                    Grid.Row="2"
+                    IsVisible="{Binding IsCardPaymentSelected}"
+                    Spacing="20"
+                    WidthRequest="390">
+                    <Label Text="Unesite podatke kartice" />
+                    <VerticalStackLayout Spacing="10">
+                        <material:TextField
+                            Title="Vlasnik kartice"
+                            Style="{StaticResource PrimaryTextField}"
+                            Text="{Binding CardHolder.Value}" />
+                        <Label
+                            IsVisible="{Binding CardHolder.HasError}"
+                            Style="{StaticResource ErrorLabel}"
+                            Text="{Binding CardHolder.Error}" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="10">
+                        <material:TextField
+                            Title="Broj kartice"
+                            Style="{StaticResource PrimaryTextField}"
+                            Text="{Binding CardNumber.Value}" />
+                        <Label
+                            IsVisible="{Binding CardNumber.HasError}"
+                            Style="{StaticResource ErrorLabel}"
+                            Text="{Binding CardNumber.Error}" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="10">
+                        <material:TextField
+                            Title="Cvv"
+                            Style="{StaticResource PrimaryTextField}"
+                            Text="{Binding Cvv.Value}" />
+                        <Label
+                            IsVisible="{Binding Cvv.HasError}"
+                            Style="{StaticResource ErrorLabel}"
+                            Text="{Binding Cvv.Error}" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="10">
+                        <material:TextField
+                            Title="Datum isteka (MM/GG)"
+                            Style="{StaticResource PrimaryTextField}"
+                            Text="{Binding Expiration.Value}" />
+                        <Label
+                            IsVisible="{Binding Expiration.HasError}"
+                            Style="{StaticResource ErrorLabel}"
+                            Text="{Binding Expiration.Error}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="3">
+                    <!--  user has addresses  -->
+                    <VerticalStackLayout IsVisible="{Binding HasAnyAddresses}" Spacing="10">
+                        <Label
+                            Margin="0,0,40,0"
+                            HorizontalOptions="End"
+                            Text="Promeni adresu"
+                            TextColor="{StaticResource Primary}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ShowAddressSelectionCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <Border StrokeShape="RoundRectangle 20" WidthRequest="350">
+                            <VerticalStackLayout Padding="20">
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="{Binding SelectedAddress.City}" />
+                                    <Label Text="{Binding SelectedAddress.ZipCode}" />
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding SelectedAddress.Street}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!--  user doesnt has addresses  -->
+                    <VerticalStackLayout IsVisible="{Binding HasAnyAddresses, Converter={StaticResource InverseBooleanConverter}}" Spacing="10">
+                        <Label HorizontalOptions="Center" Text="Trenutno nemate nijednu sačuvanu adresu" />
+                        <Button
+                            BackgroundColor="{AppThemeBinding Light=Black,
+                                                              Dark=White}"
+                            Clicked="AddAddress_Button_Clicked"
+                            Text="Dodaj adresu"
+                            TextColor="{AppThemeBinding Light=White,
+                                                        Dark=Black}"
+                            WidthRequest="350" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="4" Spacing="10">
+                    <material:EditorField
+                        Title="Napomena (opciono)"
+                        CornerRadius="30"
+                        Text="{Binding Notes.Value}"
+                        WidthRequest="350" />
+                    <Label
+                        IsVisible="{Binding Notes.HasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding Notes.Error}" />
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
+        <VerticalStackLayout
+            Grid.Row="1"
+            Margin="0,0,0,10"
+            VerticalOptions="End">
+            <VerticalStackLayout
+                Grid.Row="4"
+                Padding="20"
+                VerticalOptions="End">
+                <Grid>
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        Text="{Binding CartQuantity, StringFormat='Ukupno proizvoda: {0}'}" />
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        HorizontalOptions="End"
+                        Text="{Binding TotalPrice, StringFormat='{0:N2} RSD'}" />
+                </Grid>
+                <Grid>
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        Text="Dostava" />
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        HorizontalOptions="End"
+                        Text="Besplatno" />
+                </Grid>
+                <Grid>
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        Text="Ukupno" />
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        HorizontalOptions="End"
+                        Text="{Binding TotalPrice, StringFormat='{0:N2} RSD'}" />
+                </Grid>
+            </VerticalStackLayout>
+            <BoxView
+                Grid.Row="5"
+                Grid.ColumnSpan="2"
+                BackgroundColor="Black"
+                HeightRequest="1"
+                WidthRequest="370" />
+            <Button
+                Margin="0,10"
+                BackgroundColor="{StaticResource Primary}"
+                Command="{Binding CreateOrderCommand}"
+                CornerRadius="30"
+                FontSize="16"
+                StyleClass="ElevatedButton"
+                Text="Kreiraj porudžbinu"
+                TextColor="White"
+                WidthRequest="350" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.OrdersPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:helper="clr-namespace:SneakersShop.Helpers"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    x:Name="page"
+    Title="Moje Porudžbine"
+    Padding="8,16"
+    x:DataType="viewmodel:OrdersViewModel"
+    BackgroundColor="White"
+    Shell.TabBarIsVisible="False">
+    <Grid>
+        <ActivityIndicator
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center" />
+        <Label
+            Grid.Row="1"
+            FontAttributes="Bold"
+            FontSize="16"
+            HorizontalTextAlignment="Center"
+            IsVisible="{Binding HasOrders, Converter={StaticResource InverseBooleanConverter}}"
+            Text="Nismo pronašli nijednu porudžbinu."
+            TextColor="{StaticResource Gray400}"
+            TranslationY="-50"
+            VerticalOptions="Center" />
+        <ScrollView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+            <VerticalStackLayout>
+                <ScrollView Orientation="Horizontal">
+                    <CollectionView ItemsSource="{Binding OrderOptions}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="15" Orientation="Horizontal" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="helper:OrderStatusOption">
+                                <Button
+                                    BackgroundColor="{Binding BackgroundColor}"
+                                    Command="{Binding FilterOrdersCommand, Source={RelativeSource AncestorType={x:Type viewmodel:OrdersViewModel}}}"
+                                    CommandParameter="{Binding .}"
+                                    Style="{StaticResource PrimaryButton}"
+                                    Text="{Binding DisplayName}"
+                                    TextColor="{Binding TextColor}"
+                                    WidthRequest="120" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+                <CollectionView ItemsSource="{Binding Orders}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="20" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:OrdersModel">
+                            <VerticalStackLayout>
+                                <HorizontalStackLayout>
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="24"
+                                        Text="Porudžbina #" />
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="24"
+                                        Text="{Binding Id}" />
+                                </HorizontalStackLayout>
+                                <CollectionView ItemsSource="{Binding Items}">
+                                    <CollectionView.ItemsLayout>
+                                        <LinearItemsLayout ItemSpacing="15" Orientation="Vertical" />
+                                    </CollectionView.ItemsLayout>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="model:OrdersItemsModel">
+                                            <Border
+                                                Margin="10,0"
+                                                BackgroundColor="#f6f6f6"
+                                                StrokeShape="RoundRectangle 20"
+                                                StrokeThickness="0">
+                                                <Grid ColumnDefinitions="auto, *">
+                                                    <Image
+                                                        Aspect="AspectFit"
+                                                        HeightRequest="150"
+                                                        Source="{Binding FullImageUrl}"
+                                                        WidthRequest="150" />
+                                                    <VerticalStackLayout Grid.Column="1" Padding="15">
+                                                        <Label
+                                                            FontAttributes="Bold"
+                                                            FontSize="18"
+                                                            Text="{Binding Brand}" />
+                                                        <Label
+                                                            FontAttributes="Bold"
+                                                            FontSize="18"
+                                                            Text="{Binding Name}" />
+                                                        <Label
+                                                            FontSize="16"
+                                                            Text="{Binding Price, StringFormat='{0:N2} RSD'}"
+                                                            TextColor="{StaticResource Primary}" />
+                                                        <BoxView BackgroundColor="Transparent" HeightRequest="20" />
+                                                        <Label FontSize="16" Text="{Binding DisplaySize, StringFormat='Veličina: {0}'}" />
+                                                        <Label
+                                                            FontSize="16"
+                                                            HorizontalOptions="End"
+                                                            Text="{Binding Quantity, StringFormat='x {0}'}"
+                                                            VerticalOptions="End" />
+                                                    </VerticalStackLayout>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                                <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                                    <Button
+                                        Command="{Binding CancelOrderCommand, Source={RelativeSource AncestorType={x:Type viewmodel:OrdersViewModel}}}"
+                                        CommandParameter="{Binding Id}"
+                                        IsVisible="{Binding IsCancelVisible}"
+                                        Style="{StaticResource PrimaryButton}"
+                                        StyleClass="OutlinedButton"
+                                        Text="Otkaži"
+                                        TextColor="{StaticResource Primary}"
+                                        WidthRequest="150" />
+                                    <Button
+                                        Command="{Binding OrderDetailCommand, Source={RelativeSource AncestorType={x:Type viewmodel:OrdersViewModel}}}"
+                                        CommandParameter="{Binding Id}"
+                                        Style="{StaticResource PrimaryButton}"
+                                        Text="Detalji"
+                                        WidthRequest="150" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

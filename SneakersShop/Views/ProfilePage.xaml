@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.ProfilePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Padding="8,16"
+    x:DataType="viewmodel:ProfileViewModel"
+    BackgroundColor="White"
+    Shell.NavBarIsVisible="False">
+    <VerticalStackLayout VerticalOptions="Center">
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" />
+        <Grid IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" RowDefinitions="auto,auto,*">
+            <Grid
+                Grid.Row="1"
+                Padding="20"
+                ColumnDefinitions="*, *"
+                IsVisible="{Binding IsUserLoggedIn}"
+                VerticalOptions="Start">
+                <VerticalStackLayout VerticalOptions="Center">
+                    <Label FontSize="18" Text="Dobrodošli," />
+                    <HorizontalStackLayout Spacing="5">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="24"
+                            Text="{Binding User.FirstName}" />
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="24"
+                            Text="{Binding User.LastName}"
+                            TextColor="{StaticResource Primary}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+                <Border
+                    Grid.Column="1"
+                    BackgroundColor="White"
+                    HeightRequest="110"
+                    HorizontalOptions="End"
+                    StrokeShape="RoundRectangle 55"
+                    WidthRequest="110">
+                    <Border
+                        Grid.Column="1"
+                        HeightRequest="100"
+                        HorizontalOptions="Center"
+                        StrokeShape="RoundRectangle 50"
+                        VerticalOptions="Center"
+                        WidthRequest="100">
+                        <Image Aspect="AspectFill" Source="{Binding User.FullImageUrl}" />
+                    </Border>
+                </Border>
+            </Grid>
+            <VerticalStackLayout
+                Grid.Row="2"
+                Margin="0,50"
+                IsVisible="{Binding IsUserLoggedIn}"
+                VerticalOptions="End">
+                <Label
+                    Margin="20,5"
+                    FontSize="16"
+                    Text="Opšte" />
+                <Button
+                    Clicked="Update_User_Button_Clicked"
+                    Style="{StaticResource PrimaryButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Izmeni Profil" />
+                <Button
+                    Clicked="Addresses_Button_Clicked"
+                    Style="{StaticResource PrimaryButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Adrese" />
+                <Button
+                    Clicked="Orders_Button_Clicked"
+                    Style="{StaticResource PrimaryButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Proudžbine" />
+                <Button
+                    Clicked="Change_Password_Button_Clicked"
+                    Style="{StaticResource PrimaryButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Promeni Lozinku" />
+                <Label
+                    Margin="20,5"
+                    FontSize="16"
+                    Text="Podrška" />
+                <Button
+                    Clicked="Contact_Button_Clicked"
+                    Style="{StaticResource WhiteButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Kontakt" />
+                <Button
+                    Clicked="Privacy_Policy_Button_Clicked"
+                    Style="{StaticResource WhiteButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Politika Privatnosti" />
+                <Button
+                    Clicked="Logout_Button_Clicked"
+                    Style="{StaticResource WhiteButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Izloguj se"
+                    TextColor="{StaticResource Primary}" />
+            </VerticalStackLayout>
+            <VerticalStackLayout
+                Grid.Row="2"
+                IsVisible="{Binding IsUserLoggedIn, Converter={StaticResource InverseBooleanConverter}}"
+                VerticalOptions="Center">
+                <Label
+                    Margin="20,30"
+                    FontSize="18"
+                    HorizontalTextAlignment="Center"
+                    Text="Niste prijavljeni. Prijavite se da biste pristupili svom profilu i porudžbinama."
+                    TextColor="Gray" />
+                <Button
+                    BackgroundColor="{StaticResource Primary}"
+                    Clicked="Login_Button_Clicked"
+                    CornerRadius="30"
+                    FontSize="20"
+                    HeightRequest="50"
+                    StyleClass="ElevatedButton"
+                    Text="Prijavi se"
+                    TextColor="White"
+                    TextTransform="Uppercase"
+                    WidthRequest="350" />
+            </VerticalStackLayout>
+        </Grid>
+    </VerticalStackLayout>
+</ContentPage>

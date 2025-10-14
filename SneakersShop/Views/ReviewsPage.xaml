@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.ReviewsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:control="clr-namespace:SneakersShop.Controls"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Title="Recenzije"
+    Padding="8,16"
+    x:DataType="viewmodel:ReviewsViewModel"
+    BackgroundColor="White"
+    Shell.TabBarIsVisible="False">
+    <Grid>
+        <ActivityIndicator
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center"
+            Color="{StaticResource Primary}" />
+        <ScrollView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+            <VerticalStackLayout>
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="48"
+                                HorizontalOptions="Center"
+                                Text="{Binding AvgReview}" />
+                            <HorizontalStackLayout>
+                                <Label
+                                    FontSize="16"
+                                    Text="{Binding TotalCount}"
+                                    TextColor="{AppThemeBinding Light={StaticResource Gray600},
+                                                                Dark={StaticResource Gray300}}"
+                                    VerticalOptions="End" />
+                                <Label
+                                    FontSize="Caption"
+                                    Text=" recenzija"
+                                    TextColor="{AppThemeBinding Light={StaticResource Gray600},
+                                                                Dark={StaticResource Gray300}}"
+                                    VerticalOptions="End" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout HorizontalOptions="Fill" Spacing="10">
+                            <!--  Rejting 5 zvezdica  -->
+                            <Grid ColumnDefinitions="110, 100, auto" ColumnSpacing="5">
+                                <HorizontalStackLayout Grid.Column="0" HorizontalOptions="End">
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                </HorizontalStackLayout>
+                                <BoxView
+                                    Grid.Column="1"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    CornerRadius="20"
+                                    HeightRequest="10"
+                                    HorizontalOptions="Start"
+                                    WidthRequest="{Binding RatingWidth[5]}" />
+                                <Label
+                                    Grid.Column="2"
+                                    FontSize="14"
+                                    Text="{Binding RatingCounts[5]}"
+                                    VerticalTextAlignment="Center" />
+                            </Grid>
+
+                            <!--  Rejting 4 zvezdice  -->
+                            <Grid ColumnDefinitions="110, 100, auto" ColumnSpacing="5">
+                                <HorizontalStackLayout Grid.Column="0" HorizontalOptions="End">
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                </HorizontalStackLayout>
+                                <BoxView
+                                    Grid.Column="1"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    CornerRadius="20"
+                                    HeightRequest="10"
+                                    HorizontalOptions="Start"
+                                    WidthRequest="{Binding RatingWidth[4]}" />
+                                <Label
+                                    Grid.Column="2"
+                                    FontSize="14"
+                                    Text="{Binding RatingCounts[4]}"
+                                    VerticalTextAlignment="Center" />
+                            </Grid>
+
+                            <!--  Rejting 3 zvezdice  -->
+                            <Grid ColumnDefinitions="110, 100, auto" ColumnSpacing="5">
+                                <HorizontalStackLayout Grid.Column="0" HorizontalOptions="End">
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                </HorizontalStackLayout>
+                                <BoxView
+                                    Grid.Column="1"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    CornerRadius="20"
+                                    HeightRequest="10"
+                                    HorizontalOptions="Start"
+                                    WidthRequest="{Binding RatingWidth[3]}" />
+                                <Label
+                                    Grid.Column="2"
+                                    FontSize="14"
+                                    Text="{Binding RatingCounts[3]}"
+                                    VerticalTextAlignment="Center" />
+                            </Grid>
+
+                            <!--  Rejting 2 zvezdice  -->
+                            <Grid ColumnDefinitions="110, 100, auto" ColumnSpacing="5">
+                                <HorizontalStackLayout Grid.Column="0" HorizontalOptions="End">
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                </HorizontalStackLayout>
+                                <BoxView
+                                    Grid.Column="1"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    CornerRadius="20"
+                                    HeightRequest="10"
+                                    HorizontalOptions="Start"
+                                    WidthRequest="{Binding RatingWidth[2]}" />
+                                <Label
+                                    Grid.Column="2"
+                                    FontSize="14"
+                                    Text="{Binding RatingCounts[2]}"
+                                    VerticalTextAlignment="Center" />
+                            </Grid>
+
+                            <!--  Rejting 1 zvezdica  -->
+                            <Grid ColumnDefinitions="110, 100, auto" ColumnSpacing="5">
+                                <HorizontalStackLayout Grid.Column="0" HorizontalOptions="End">
+                                    <Image
+                                        HeightRequest="20"
+                                        Source="star_filled.svg"
+                                        WidthRequest="20" />
+                                </HorizontalStackLayout>
+                                <BoxView
+                                    Grid.Column="1"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    CornerRadius="20"
+                                    HeightRequest="10"
+                                    HorizontalOptions="Start"
+                                    WidthRequest="{Binding RatingWidth[1]}" />
+                                <Label
+                                    Grid.Column="2"
+                                    FontSize="14"
+                                    Text="{Binding RatingCounts[1]}"
+                                    VerticalTextAlignment="Center" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!--  Lista recenzija  -->
+                <CollectionView HorizontalOptions="Center" ItemsSource="{Binding Reviews}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:ReviewsModel">
+                            <Grid RowDefinitions="auto, auto">
+                                <Border
+                                    Grid.Column="0"
+                                    BackgroundColor="White"
+                                    HeightRequest="40"
+                                    HorizontalOptions="Start"
+                                    StrokeShape="RoundRectangle 55"
+                                    TranslationY="20"
+                                    WidthRequest="40"
+                                    ZIndex="1">
+                                    <Border
+                                        Grid.Column="1"
+                                        HeightRequest="35"
+                                        HorizontalOptions="Center"
+                                        StrokeShape="RoundRectangle 50"
+                                        VerticalOptions="Center"
+                                        WidthRequest="35">
+                                        <Image Aspect="AspectFill" Source="{Binding FullImageUrl}" />
+                                    </Border>
+                                </Border>
+                                <Border
+                                    Grid.Row="1"
+                                    BackgroundColor="#e6e6e6"
+                                    StrokeShape="RoundRectangle 20"
+                                    StrokeThickness="0"
+                                    WidthRequest="350">
+                                    <Grid Margin="20" RowDefinitions="auto, auto, auto">
+                                        <Label
+                                            Grid.Row="0"
+                                            Padding="3,0"
+                                            Text="{Binding Username}"
+                                            TextColor="Black" />
+                                        <control:RatingControl
+                                            Grid.Row="1"
+                                            Amount="5"
+                                            CurrentValue="{Binding Rating}"
+                                            StarSize="18" />
+                                        <Label
+                                            Grid.Row="1"
+                                            FontSize="12"
+                                            HorizontalOptions="End"
+                                            Text="{Binding CreatedAt}"
+                                            TextColor="{StaticResource Gray600}" />
+                                        <Label
+                                            Grid.Row="2"
+                                            Margin="0,10,0,0"
+                                            Text="{Binding Comment}"
+                                            TextColor="Black" />
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <FlexLayout
+                    Margin="15"
+                    IsVisible="{Binding IsPageinationAvailable}"
+                    JustifyContent="SpaceBetween"
+                    WidthRequest="150">
+                    <Button
+                        Command="{Binding PreviousPageCommand}"
+                        IsEnabled="{Binding IsPreviousPageAvailable}"
+                        Text="-" />
+                    <Label
+                        FontSize="24"
+                        Text="{Binding CurrentPage}"
+                        VerticalOptions="Center" />
+                    <Button
+                        Command="{Binding NextPageCommand}"
+                        IsEnabled="{Binding IsNextPageAvailable}"
+                        Text="+" />
+                </FlexLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!--  Dugme za kreiranje recenzije  -->
+        <Border
+            Margin="0,0,15,70"
+            Padding="15,5"
+            BackgroundColor="{StaticResource Primary}"
+            HeightRequest="60"
+            HorizontalOptions="End"
+            IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+            StrokeShape="RoundRectangle 30"
+            StrokeThickness="0"
+            VerticalOptions="End"
+            WidthRequest="60">
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                <Image
+                    HeightRequest="24"
+                    Source="edit.png"
+                    VerticalOptions="Center">
+                    <Image.Behaviors>
+                        <mct:IconTintColorBehavior TintColor="White" />
+                    </Image.Behaviors>
+                </Image>
+            </HorizontalStackLayout>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToReviewCreatePageCommand}" />
+            </Border.GestureRecognizers>
+        </Border>
+        <BoxView
+            BackgroundColor="Transparent"
+            HeightRequest="100"
+            VerticalOptions="End"
+            WidthRequest="300" />
+    </Grid>
+</ContentPage>

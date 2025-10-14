@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SneakersShop.Views.FavoritesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:card="clr-namespace:SneakersShop.Components.Cards"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:model="clr-namespace:SneakersShop.Models"
+    xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
+    Padding="8,16"
+    x:DataType="viewmodel:FavoritesViewModel"
+    BackgroundColor="white"
+    Shell.NavBarIsVisible="False">
+    <Grid RowDefinitions="auto, *" RowSpacing="20">
+        <!--  Pretraga  -->
+        <material:TextField
+            Title="Pretraži"
+            Icon="search_selected.png"
+            IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+            Style="{StaticResource PrimaryTextField}"
+            Text="{Binding Keyword}">
+            <material:TextField.Attachments>
+                <Button
+                    Margin="0,0,5,0"
+                    Command="{Binding LoadFavoritesCommand}"
+                    FontSize="16"
+                    HeightRequest="34"
+                    Style="{StaticResource PrimaryButton}"
+                    Text="Pretraži"
+                    WidthRequest="105" />
+            </material:TextField.Attachments>
+        </material:TextField>
+        <Entry x:Name="DummyEntry" IsVisible="False" />
+
+        <Label
+            Grid.Row="1"
+            FontAttributes="Bold"
+            FontSize="16"
+            HorizontalTextAlignment="Center"
+            IsVisible="{Binding HasFavorites, Converter={StaticResource InverseBooleanConverter}}"
+            Text="Nismo pronašli nijedan proizvod ili nema te omiljene proizvode."
+            TextColor="{StaticResource Gray400}"
+            TranslationY="-50"
+            VerticalOptions="Center" />
+
+        <ActivityIndicator
+            Grid.Row="1"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center"
+            Color="{StaticResource Primary}" />
+
+        <ScrollView
+            Grid.Row="1"
+            IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+            VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout>
+
+                <!--  Proizvodi  -->
+                <CollectionView ItemsSource="{Binding Favorites}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="15" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:ProductsModel">
+                            <card:ProductCardHorizontal
+                                Name="{Binding ProductName}"
+                                AvgRating="{Binding AvgRating}"
+                                Brand="{Binding Brand}"
+                                CountReview="{Binding ReviewCount}"
+                                HasDiscount="{Binding HasDiscount}"
+                                Image="{Binding Thumbnail}"
+                                NewPrice="{Binding NewPrice}"
+                                OldPrice="{Binding OldPrice}"
+                                ProductColorId="{Binding ProductColorId}"
+                                TextColor="{Binding TextColor}" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <FlexLayout
+                    Margin="15"
+                    IsVisible="{Binding IsPaginationAvailable}"
+                    JustifyContent="SpaceBetween"
+                    WidthRequest="150">
+                    <Button
+                        Command="{Binding PreviousPageCommand}"
+                        IsEnabled="{Binding IsPreviousPageAvailable}"
+                        Text="-" />
+                    <Label
+                        FontSize="24"
+                        Text="{Binding CurrentPage}"
+                        VerticalOptions="Center" />
+                    <Button
+                        Command="{Binding NextPageCommand}"
+                        IsEnabled="{Binding IsNextPageAvailable}"
+                        Text="+" />
+                </FlexLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
