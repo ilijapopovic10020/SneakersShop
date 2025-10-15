@@ -7,6 +7,7 @@ using SneakersShop.Helpers;
 using SneakersShop.Models;
 using SneakersShop.Models.Search;
 using SneakersShop.Services.Interfaces;
+using SneakersShop.Views;
 
 namespace SneakersShop.ViewModels
 {
@@ -42,6 +43,9 @@ namespace SneakersShop.ViewModels
 
         [ObservableProperty]
         private bool isLoading;
+
+        [ObservableProperty]
+        private string? keyword;
 
         public HomeViewModel(
             IBrandService brandService,
@@ -170,6 +174,33 @@ namespace SneakersShop.ViewModels
             {
                 IsRecommendedLoading = false;
             }
+        }
+
+        [RelayCommand]
+        private async Task KeywordSearch()
+        {
+            await Shell.Current.GoToAsync($"///{nameof(ProductsPage)}", true, new Dictionary<string, object?>
+            {
+                { "Keyword", Keyword }
+            });
+        }
+
+        [RelayCommand]
+        private async Task BrandSearch(BrandsModel brand)
+        {
+            await Shell.Current.GoToAsync($"///{nameof(ProductsPage)}", true, new Dictionary<string, object?>
+            {
+                { "SelectedBrands", new List<int> { brand.Id } }
+            });
+        }
+
+        [RelayCommand]
+        private async Task CategorySearch(CategoriesModel category)
+        {
+            await Shell.Current.GoToAsync($"///{nameof(ProductsPage)}", true, new Dictionary<string, object?>
+            {
+                { "SelectedCategory", category }
+            });
         }
     }
 }

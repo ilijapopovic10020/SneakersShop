@@ -1,26 +1,63 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui;
 using SneakersShop.Components.Popups;
 using SneakersShop.Helpers;
 using SneakersShop.Models;
 using SneakersShop.Models.Search;
 using SneakersShop.Services.Interfaces;
+using SneakersShop.Views;
 using System.Collections.ObjectModel;
 
 namespace SneakersShop.ViewModels
 {
-    [QueryProperty(nameof(MinPriceString), "MinPrice")]
-    [QueryProperty(nameof(MaxPriceString), "MaxPrice")]
-    [QueryProperty(nameof(SelectedBrandsString), "SelectedBrands")]
-    [QueryProperty(nameof(SelectedColorsString), "SelectedColors")]
-    public partial class ProductsViewModel : ObservableObject
+    
+    public partial class ProductsViewModel : ObservableObject, IQueryAttributable
     {
         private readonly IProductsService _productsService;
         private readonly ICategoryService _categoryService;
 
+        public ProductsViewModel(IProductsService productsService, ICategoryService categoryService)
+        {
+            _productsService = productsService;
+            _categoryService = categoryService;
+
+            Filters = [.. Enum.GetValues(typeof(FilterModel))
+                        .Cast<FilterModel>()
+                        .Select(f => new FilterOption{Filter = f})];
+
+            SelectedFilter = Filters.FirstOrDefault();
+            SelectedFilter.IsSelected = true;
+        }
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+
+            if (query.TryGetValue("Keyword", out var keyword))
+                Keyword = keyword as string ?? string.Empty;
+
+            if (query.TryGetValue("SelectedCategory", out var category))
+                SelectedCategory = category as CategoriesModel ?? new CategoriesModel();            
+
+            if(query.TryGetValue("SelectedBrands", out var brands))
+                SelectedBrands = brands as List<int> ?? [];
+
+            if (query.TryGetValue("SelectedColors", out var colors))
+                SelectedColors = colors as List<string> ?? [];
+
+            if (query.TryGetValue("MinPrice", out var minPrice))
+                MinPrice = (decimal?)(minPrice ?? null);
+
+            if (query.TryGetValue("MaxPrice", out var maxPrice))
+                MaxPrice = (decimal?)(maxPrice ?? null);
+        }
+
         [ObservableProperty]
-        private ObservableCollection<ProductsModel> products;
+        private bool isLoading = false;
+
+        [ObservableProperty]
+        private ObservableCollection<ProductsModel> products = [];
 
         #region Pagination
         [ObservableProperty]
@@ -43,92 +80,62 @@ namespace SneakersShop.ViewModels
 
         [ObservableProperty]
         private bool isPreviousPageAvailable = true;
-
         #endregion
 
-        [ObservableProperty]
-        private bool isLoading = false;
-
+        #region Sorting
         [ObservableProperty]
         private ObservableCollection<FilterOption> filters;
 
         [ObservableProperty]
         private FilterOption selectedFilter;
+        #endregion
+
+        #region Filtering
+        [ObservableProperty]
+        private ObservableCollection<CategoriesModel> categories = [];
 
         [ObservableProperty]
-        private ObservableCollection<CategoriesModel> categories;
-
-        [ObservableProperty]
-        private CategoriesModel? selectedCategory;
+        private CategoriesModel? selectedCategory = new();
 
         [ObservableProperty]
         private string? keyword;
 
         [ObservableProperty]
-        private string? minPriceString;
-        public decimal? MinPrice => decimal.TryParse(MinPriceString, out var result) ? result : null;
+        private List<int>? selectedBrands = [];
 
         [ObservableProperty]
-        private string? maxPriceString;
-
-        private decimal? MaxPrice => decimal.TryParse(MaxPriceString, out var result) ? result : null;
+        private List<string>? selectedColors = [];
 
         [ObservableProperty]
-        private string? selectedBrandsString;
-
-        private List<int>? SelectedBrands => !string.IsNullOrWhiteSpace(SelectedBrandsString) 
-            ? [.. SelectedBrandsString.Split(',').Select(int.Parse)]
-            : null;
+        private decimal? minPrice;
 
         [ObservableProperty]
-        private string? selectedColorsString;
+        private decimal? maxPrice;
+        #endregion
 
-        public List<string>? SelectedColors => !string.IsNullOrWhiteSpace(SelectedColorsString) 
-            ? [.. SelectedColorsString.Split(',')]
-            : null;
 
-        public ProductsViewModel(IProductsService productsService, ICategoryService categoryService)
-        {
-            _productsService = productsService;
-            _categoryService = categoryService;
-
-            Products = [];
-            Categories = [];
-
-            Filters = [.. Enum.GetValues(typeof(FilterModel))
-                        .Cast<FilterModel>()
-                        .Select(f => new FilterOption{Filter = f})];
-
-            SelectedFilter = Filters.FirstOrDefault();
-            SelectedFilter.IsSelected = true;
-
-            _ = LoadCategories();
-        }
-
+        [RelayCommand]
         private async Task LoadCategories()
         {
             try
             {
                 var categories = await _categoryService.GetCategoriesAsync();
 
-                if (categories != null)
-                {
-                    var allCategories = new List<CategoriesModel>
+                var allCategories = new List<CategoriesModel>
                     {
                         new() { Id = 0, Name = "Sve kategorije", IsSelected = false }
                     };
-                    allCategories.AddRange(categories);
+                allCategories.AddRange(categories);
 
-                    Categories = [.. allCategories];
+                Categories = [.. allCategories];
 
-                    SelectedCategory = allCategories.First();
-                    SelectedCategory.IsSelected = true;
-                }
+                SelectedCategory = Categories.First();
+                SelectedCategory.IsSelected = true;
             }
             catch (Exception ex)
             {
                 var popup = new MessagePopup("Greška", ex.Message);
-                await App.Current.MainPage.ShowPopupAsync(popup);
+                await Shell.Current.ShowPopupAsync(popup);
             }
         }
 
@@ -138,47 +145,34 @@ namespace SneakersShop.ViewModels
             try
             {
                 IsLoading = true;
-
-                var search = new ProductsSearch()
+                var search = new ProductsSearch
                 {
                     Page = CurrentPage,
                     PerPage = ItemsPerPage,
-                    Filter = (int)SelectedFilter.Filter,
                     Keyword = Keyword,
                     CategoryId = SelectedCategory?.Id == 0 ? null : SelectedCategory?.Id,
-                    BrandId = SelectedBrands,
-                    Color = SelectedColors,
+                    BrandId = SelectedBrands.Count != 0 ? SelectedBrands : null,
+                    Color = SelectedColors.Count != 0 ? SelectedColors : null,
                     MinPrice = MinPrice,
-                    MaxPrice = MaxPrice
+                    MaxPrice = MaxPrice,
+                    Filter = (int)SelectedFilter.Filter
                 };
 
                 var products = await _productsService.GetProductsAsync(search);
 
-                if (products.Data != null)
-                    Products = [.. products.Data];
-
+                Products = [.. products.Data];
                 TotalCount = products.TotalCount;
                 PagesCount = products.PagesCount;
+                CurrentPage = products.CurrentPage;
 
-                if (PagesCount == 1)
-                    IsPageinationAvailable = false;
-                else
-                    IsPageinationAvailable = true;
-
-                if (CurrentPage == 1)
-                    IsPreviousPageAvailable = false;
-                else
-                    IsPreviousPageAvailable = true;
-
-                if (CurrentPage == PagesCount)
-                    IsNextPageAvailable = false;
-                else
-                    IsNextPageAvailable = true;
+                IsPageinationAvailable = TotalCount > 0;
+                IsNextPageAvailable = CurrentPage < PagesCount;
+                IsPreviousPageAvailable = CurrentPage > 1;
             }
             catch (Exception ex)
             {
-                var popup = new MessagePopup("Greška", ex.Message);
-                await App.Current.MainPage.ShowPopupAsync(popup);
+                var popup = new MessagePopup("Greška", ex.InnerException.Message);
+                await Shell.Current.ShowPopupAsync(popup);
             }
             finally
             {
@@ -192,7 +186,7 @@ namespace SneakersShop.ViewModels
             var popup = new SortPopup(Filters, SelectedFilter);
             var result = await App.Current.MainPage.ShowPopupAsync(popup);
 
-            if(result is FilterOption selected)
+            if (result is FilterOption selected)
             {
                 SelectedFilter = selected;
                 SelectedFilter.IsSelected = true;
@@ -221,12 +215,14 @@ namespace SneakersShop.ViewModels
         [RelayCommand]
         private async Task Search()
         {
-            SelectedBrandsString = null;
-            SelectedColorsString = null;
-            MinPriceString = null;
-            MaxPriceString = null;
+            SelectedBrands = [];
+            SelectedColors = [];
+            MinPrice = null;
+            MaxPrice= null;
             CurrentPage = 1;
-            SelectedCategory = null;
+            SelectedCategory.IsSelected = false;
+            SelectedCategory = Categories.FirstOrDefault(x => x.Id == 0);
+            SelectedCategory.IsSelected = true;
             await LoadProducts();
         }
 
@@ -248,6 +244,18 @@ namespace SneakersShop.ViewModels
                 CurrentPage--;
                 await LoadProducts();
             }
+        }
+
+        [RelayCommand]
+        private async Task FiltersOptions()
+        {
+            await Shell.Current.GoToAsync($"{nameof(FiltersPage)}", true, new Dictionary<string, object?>
+            {
+                { "SelectedBrands", SelectedBrands },
+                { "SelectedColors", SelectedColors },
+                { "MinPrice", MinPrice },
+                { "MaxPrice", MaxPrice }
+            });
         }
     }
 }

@@ -101,7 +101,7 @@
                     HorizontalOptions="Start"
                     Text="Boje"
                     TextColor="{StaticResource Secondary}" />
-                <CollectionView ItemsSource="{Binding VisibleColors}">
+                <CollectionView ItemsSource="{Binding Colors}">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout
                             HorizontalItemSpacing="10"
@@ -120,29 +120,11 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Button
-                    Margin="0,0,5,0"
-                    Command="{Binding ToggleColorVisibilityCommand}"
-                    FontSize="16"
-                    HorizontalOptions="End"
-                    IsVisible="{Binding IsShowingAllColors, Converter={StaticResource InverseBooleanConverter}}"
-                    Style="{StaticResource WhiteButton}"
-                    Text="Više"
-                    WidthRequest="100" />
-                <Button
-                    Margin="0,0,5,0"
-                    Command="{Binding ToggleColorVisibilityCommand}"
-                    FontSize="16"
-                    HorizontalOptions="End"
-                    IsVisible="{Binding IsShowingAllColors}"
-                    Style="{StaticResource WhiteButton}"
-                    Text="Manje"
-                    WidthRequest="100" />
             </VerticalStackLayout>
         </Border>
 
         <Button
-            Command="{Binding AppyFiltersCommand}"
+            Command="{Binding ApplyFiltersCommand}"
             Style="{StaticResource PrimaryButton}"
             Text="Primeni filtere"
             VerticalOptions="End" />

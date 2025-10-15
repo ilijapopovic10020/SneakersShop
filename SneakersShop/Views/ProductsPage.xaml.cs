@@ -10,6 +10,8 @@ public partial class ProductsPage : ContentPage
 		InitializeComponent();
         BindingContext = vm;
         _vm = vm;
+
+        _vm.LoadCategoriesCommand.ExecuteAsync(null);
     }
 
     protected override async void OnAppearing()
@@ -17,10 +19,5 @@ public partial class ProductsPage : ContentPage
         base.OnAppearing();
 
         await _vm.LoadProductsCommand.ExecuteAsync(null);
-    }
-
-    private async void Filters_TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
-    {
-        await Shell.Current.GoToAsync(nameof(FiltersPage));
     }
 }

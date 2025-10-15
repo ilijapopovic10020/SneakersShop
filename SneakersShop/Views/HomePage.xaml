@@ -18,10 +18,12 @@
                 <material:TextField
                     Title="Pretraži"
                     Icon="search_selected.png"
-                    Style="{StaticResource PrimaryTextField}">
+                    Style="{StaticResource PrimaryTextField}"
+                    Text="{Binding Keyword}">
                     <material:TextField.Attachments>
                         <Button
                             Margin="0,0,5,0"
+                            Command="{Binding KeywordSearchCommand}"
                             FontSize="16"
                             HeightRequest="34"
                             Style="{StaticResource PrimaryButton}"
@@ -60,7 +62,12 @@
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:BrandsModel">
-                                <Button StyleClass="OutlinedButton" Text="{Binding Name}" />
+                                <Button
+                                    Command="{Binding BrandSearchCommand, Source={RelativeSource AncestorType={x:Type viewmodel:HomeViewModel}}}"
+                                    CommandParameter="{Binding}"
+                                    StyleClass="OutlinedButton"
+                                    Text="{Binding Name}"
+                                    TextColor="Black" />
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -105,13 +112,12 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:CategoriesModel">
                                 <Button
-                                    Command="{Binding SelectedCategoryCommand, Source={RelativeSource AncestorType={Type viewmodel:HomeViewModel}}}"
-                                    CommandParameter="{Binding Id}"
+                                    Command="{Binding CategorySearchCommand, Source={RelativeSource AncestorType={x:Type viewmodel:HomeViewModel}}}"
+                                    CommandParameter="{Binding}"
                                     FontSize="16"
                                     StyleClass="OutlinedButton"
                                     Text="{Binding Name}"
-                                    TextColor="{AppThemeBinding Light={StaticResource Black},
-                                                                Dark={StaticResource White}}" />
+                                    TextColor="Black" />
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>

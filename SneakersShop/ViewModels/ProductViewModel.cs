@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SneakersShop.Components.Popups;
+using SneakersShop.Exceptions;
 using SneakersShop.Helpers;
 using SneakersShop.Models;
 using SneakersShop.Models.Search;
@@ -237,6 +238,11 @@ namespace SneakersShop.ViewModels
                     await Shell.Current.GoToAsync($"//{nameof(CartPage)}");
                 }
             }
+            catch (UserNotFoundException)
+            {
+                var popup = new MessagePopup("Greška", "Niste ulogovani. Molimo da se ulogujete da bi ste dodali proizvod u korpu.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
             catch (Exception ex)
             {
                 var popup = new MessagePopup("Greška", ex.Message);
@@ -266,6 +272,11 @@ namespace SneakersShop.ViewModels
                     var popup = new MessagePopup("", "Uspešno ste dodali proizvod u korpu.");
                     await Shell.Current.ShowPopupAsync(popup);
                 }
+            }
+            catch (UserNotFoundException)
+            {
+                var popup = new MessagePopup("Greška", "Niste ulogovani. Molimo da se ulogujete da bi ste dodali proizvod u korpu.");
+                await Shell.Current.ShowPopupAsync(popup);
             }
             catch (Exception ex)
             {

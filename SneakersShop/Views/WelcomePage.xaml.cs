@@ -9,13 +9,14 @@ public partial class WelcomePage : ContentPage
 
     private async void Login_Button_Clicked(object sender, EventArgs e)
     {
-        //Application.Current.MainPage = new AppShell();
         await Shell.Current.GoToAsync($"{nameof(LoginPage)}");
     }
 
     private async void Skip_Login_Button_Clicked(object sender, EventArgs e)
     {
-        //Application.Current.MainPage = new AppShell();
+        if(Application.Current != null)
+            Application.Current.MainPage = new AppShell();
+
         await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
     }
 }

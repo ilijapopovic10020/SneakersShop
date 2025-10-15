@@ -20,6 +20,12 @@ namespace SneakersShop.ViewModels
         private ObservableCollection<CartModel> cartItems = [];
 
         [ObservableProperty]
+        private bool isUserLoggedIn = false;
+
+        [ObservableProperty]
+        private bool isLoading = false;
+
+        [ObservableProperty]
         private bool isAllSelected = true;
 
         private bool isSyncingSelection = false;
@@ -57,6 +63,13 @@ namespace SneakersShop.ViewModels
             {
                 try
                 {
+                    IsLoading = true;
+
+                    var user = await SecureStorage.Default.GetUser();
+
+                    if (user != null)
+                        IsUserLoggedIn = true;
+
                     var serverItems = await _cartService.GetCartItemsAsync();
                     _cartService.LoadFromServer(serverItems);
 
@@ -69,7 +82,8 @@ namespace SneakersShop.ViewModels
                 {
                     if (ex is UserNotFoundException)
                     {
-                        await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+                        IsUserLoggedIn = false;
+                        return;
                     }
                     else
                     {
@@ -77,7 +91,10 @@ namespace SneakersShop.ViewModels
                         await Shell.Current.ShowPopupAsync(popup);
                     }
                 }
-                
+                finally
+                {
+                    IsLoading = false;
+                }
             }
             catch (Exception ex)
             {

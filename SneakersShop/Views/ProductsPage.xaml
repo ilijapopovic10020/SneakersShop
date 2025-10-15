@@ -87,7 +87,7 @@
                             Source="filter.png"
                             WidthRequest="20">
                             <Image.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="Filters_TapGestureRecognizer_Tapped" />
+                                <TapGestureRecognizer Command="{Binding FiltersOptionsCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
                     </Border>

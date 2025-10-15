@@ -1,37 +1,51 @@
-﻿using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui;
 using SneakersShop.Components.Popups;
 using SneakersShop.Models;
-using SneakersShop.Models.Search;
 using SneakersShop.Services.Interfaces;
 using SneakersShop.Views;
 using System.Collections.ObjectModel;
 
 namespace SneakersShop.ViewModels
 {
-    public partial class FiltersViewModel : ObservableObject
+    public partial class FiltersViewModel : ObservableObject, IQueryAttributable
     {
         private readonly IBrandService _brandService;
         private readonly IColorService _colorService;
 
-        [ObservableProperty]
-        private ObservableCollection<BrandsModel> brands;
+        public FiltersViewModel(IBrandService brandService, IColorService colorService)
+        {
+            _brandService = brandService;
+            _colorService = colorService;
+        }
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            if (query.TryGetValue("SelectedBrands", out var brands))
+                SelectedBrands = brands as List<int> ?? [];
+
+            if (query.TryGetValue("SelectedColors", out var colors))
+                SelectedColors = colors as List<string> ?? [];
+
+            if (query.TryGetValue("MinPrice", out var minPrice))
+                MinPrice = (decimal?)(minPrice ?? null);
+
+            if (query.TryGetValue("MaxPrice", out var maxPrice))
+                MaxPrice = (decimal?)(maxPrice ?? null);
+        }
 
         [ObservableProperty]
-        private List<int>? selectedBrands;
+        private ObservableCollection<BrandsModel> brands = [];
 
         [ObservableProperty]
-        private ObservableCollection<ColorsModel> colors;
+        private List<int>? selectedBrands = [];
 
         [ObservableProperty]
-        private bool isShowingAllColors = false;
+        private ObservableCollection<ColorsModel> colors = [];
 
         [ObservableProperty]
-        private ObservableCollection<ColorsModel> visibleColors;
-
-        [ObservableProperty]
-        private List<string>? selectedColors;
+        private List<string>? selectedColors = [];
 
         [ObservableProperty]
         private decimal? minPrice;
@@ -39,85 +53,34 @@ namespace SneakersShop.ViewModels
         [ObservableProperty]
         private decimal? maxPrice;
 
-        [ObservableProperty]
-        private bool isLoading = false;
 
-        public FiltersViewModel(IBrandService brandService, IColorService colorService)
-        {
-            _brandService = brandService;
-            _colorService = colorService;
-
-            Brands = [];
-            SelectedBrands = [];
-
-            Colors = [];
-            SelectedColors = [];
-            VisibleColors = [];
-        }
 
         [RelayCommand]
         private async Task LoadFilters()
         {
-            try
-            {
-                IsLoading = true;
+            var allBrands = await _brandService.GetBrandsAsync();
+            Brands = new ObservableCollection<BrandsModel>(allBrands);
 
-                var brands = await _brandService.GetBrandsAsync();
-                Brands = [.. brands];
+            var allColors = await _colorService.GetColorsAsync();
+            Colors = new ObservableCollection<ColorsModel>(allColors);
 
-                var colors = await _colorService.GetColorsAsync();
+            foreach (var brand in Brands)
+                brand.IsSelected = SelectedBrands.Contains(brand.Id);
 
-                if (colors != null)
-                {
-                    Colors = [.. colors.Where(c => !c.Name.Contains('-'))];
-                    UpdateVisibleColors();
-                }
-            }
-            catch (Exception ex)
-            {
-                var popup = new MessagePopup("Greška", ex.Message);
-                await App.Current.MainPage.ShowPopupAsync(popup);
-            }
-            finally
-            {
-                IsLoading = false;
-            }
+            foreach (var color in Colors)
+                color.IsSelected = SelectedColors.Contains(color.Name);
         }
 
         [RelayCommand]
-        private void ToggleColorVisibility()
+        private async Task ApplyFilters()
         {
-            IsShowingAllColors = !IsShowingAllColors;
-            UpdateVisibleColors();
-        }
-
-        private void UpdateVisibleColors()
-        {
-            if (IsShowingAllColors)
+            await Shell.Current.GoToAsync($"//{nameof(ProductsPage)}", true, new Dictionary<string, object?>
             {
-                VisibleColors = [.. Colors];
-            }
-            else
-            {
-                VisibleColors = [.. Colors.Take(5)];
-            }
-        }
-
-        [RelayCommand]
-        private async Task AppyFilters()
-        {
-            if (MaxPrice <= 0)
-                MaxPrice = null;
-
-            SelectedColors = [.. Colors.Where(color => color.IsSelected).Select(color => color.Name)];
-
-            SelectedBrands = [.. Brands.Where(brand => brand.IsSelected).Select(brand => brand.Id)];
-
-            var brandsString = string.Join(",", SelectedBrands);
-
-            var colorsString = string.Join(",", SelectedColors);
-
-            await Shell.Current.GoToAsync($"//{nameof(ProductsPage)}?SelectedBrands={brandsString}&SelectedColors={colorsString}&MinPrice={MinPrice}&MaxPrice={MaxPrice}");
+                { "SelectedBrands", SelectedBrands },
+                { "SelectedColors", SelectedColors },
+                { "MinPrice", MinPrice },
+                { "MaxPrice", MaxPrice }
+            });
         }
     }
 }

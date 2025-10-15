@@ -10,84 +10,91 @@
     x:DataType="viewmodel:RegisterViewModel"
     BackgroundColor="White"
     Shell.TabBarIsVisible="False">
-    <VerticalStackLayout Spacing="20" VerticalOptions="Center">
-        <Label
-            FontAttributes="Bold"
-            FontSize="44"
-            HorizontalTextAlignment="Center"
-            Text="Registracija" />
-        <VerticalStackLayout IsVisible="{Binding IsNextStepEnabled, Converter={StaticResource InverseBooleanConverter}}">
-            <VerticalStackLayout Spacing="5">
-                <material:TextField Title="Ime" Text="{Binding FirstName.Value}" />
-                <Label
-                    IsVisible="{Binding FirstName.HasError}"
-                    Style="{StaticResource ErrorLabel}"
-                    Text="{Binding FirstName.Error}" />
-            </VerticalStackLayout>
-
-            <VerticalStackLayout Spacing="5">
-                <material:TextField Title="Prezime" Text="{Binding LastName.Value}" />
-                <Label
-                    IsVisible="{Binding LastName.HasError}"
-                    Style="{StaticResource ErrorLabel}"
-                    Text="{Binding LastName.Error}" />
-            </VerticalStackLayout>
-
-            <VerticalStackLayout Spacing="5">
-                <material:TextField Title="Broj Telefona" Text="{Binding Phone.Value}" />
-                <Label
-                    IsVisible="{Binding Phone.HasError}"
-                    Style="{StaticResource ErrorLabel}"
-                    Text="{Binding Phone.Error}" />
-            </VerticalStackLayout>
-
-            <Button
+    <Grid>
+        <VerticalStackLayout Spacing="20" VerticalOptions="Center">
+            <Label
                 FontAttributes="Bold"
-                Style="{StaticResource PrimaryButton}"
-                StyleClass="ElevatedButton"
-                Text="Sledeći korak" />
+                FontSize="44"
+                HorizontalTextAlignment="Center"
+                Text="Registracija" />
+            <VerticalStackLayout IsVisible="{Binding IsNextStepEnabled, Converter={StaticResource InverseBooleanConverter}}">
+                <VerticalStackLayout Spacing="5">
+                    <material:TextField Title="Ime" Text="{Binding FirstName.Value}" />
+                    <Label
+                        IsVisible="{Binding FirstName.HasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding FirstName.Error}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <material:TextField Title="Prezime" Text="{Binding LastName.Value}" />
+                    <Label
+                        IsVisible="{Binding LastName.HasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding LastName.Error}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <material:TextField Title="Broj Telefona" Text="{Binding Phone.Value}" />
+                    <Label
+                        IsVisible="{Binding Phone.HasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding Phone.Error}" />
+                </VerticalStackLayout>
+
+                <Button
+                    FontAttributes="Bold"
+                    Style="{StaticResource PrimaryButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Sledeći korak" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout IsVisible="{Binding IsNextStepVisible}">
+                <VerticalStackLayout Spacing="5">
+                    <material:TextField Title="E-adresa" Text="{Binding Email.Value}" />
+                    <Label
+                        IsVisible="{Binding Email.HasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding Email.Error}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <material:TextField Title="Korisničko ime" Text="{Binding Username.Value}" />
+                    <Label
+                        IsVisible="{Binding Username.HasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding Username.Error}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <material:TextField Title="Lozinka" Text="{Binding Password.Value}" />
+                    <Label
+                        IsVisible="{Binding Password.HasError}"
+                        Style="{StaticResource ErrorLabel}"
+                        Text="{Binding Password.Error}" />
+                </VerticalStackLayout>
+
+                <Button
+                    Command="{Binding RegisterCommand}"
+                    FontAttributes="Bold"
+                    IsEnabled="{Binding IsRegisterButtonEnabled}"
+                    Style="{StaticResource PrimaryButton}"
+                    StyleClass="ElevatedButton"
+                    Text="Registruj se" />
+            </VerticalStackLayout>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                <Label Text="Već imate nalog?" VerticalOptions="Center" />
+                <Button
+                    Clicked="Login_Button_Clicked"
+                    Style="{StaticResource TextButton}"
+                    Text="Prijavi se" />
+            </HorizontalStackLayout>
         </VerticalStackLayout>
-
-        <VerticalStackLayout IsVisible="{Binding IsNextStepVisible}">
-            <VerticalStackLayout Spacing="5">
-                <material:TextField Title="E-adresa" Text="{Binding Email.Value}" />
-                <Label
-                    IsVisible="{Binding Email.HasError}"
-                    Style="{StaticResource ErrorLabel}"
-                    Text="{Binding Email.Error}" />
-            </VerticalStackLayout>
-
-            <VerticalStackLayout Spacing="5">
-                <material:TextField Title="Korisničko ime" Text="{Binding Username.Value}" />
-                <Label
-                    IsVisible="{Binding Username.HasError}"
-                    Style="{StaticResource ErrorLabel}"
-                    Text="{Binding Username.Error}" />
-            </VerticalStackLayout>
-
-            <VerticalStackLayout Spacing="5">
-                <material:TextField Title="Lozinka" Text="{Binding Password.Value}" />
-                <Label
-                    IsVisible="{Binding Password.HasError}"
-                    Style="{StaticResource ErrorLabel}"
-                    Text="{Binding Password.Error}" />
-            </VerticalStackLayout>
-
-            <Button
-                Command="{Binding RegisterCommand}"
-                FontAttributes="Bold"
-                IsEnabled="{Binding IsRegisterButtonEnabled}"
-                Style="{StaticResource PrimaryButton}"
-                StyleClass="ElevatedButton"
-                Text="Registruj se" />
-        </VerticalStackLayout>
-
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-            <Label Text="Već imate nalog?" VerticalOptions="Center" />
-            <Button
-                Clicked="Login_Button_Clicked"
-                Style="{StaticResource TextButton}"
-                Text="Prijavi se" />
-        </HorizontalStackLayout>
-    </VerticalStackLayout>
+        <Button
+            Clicked="Privacy_Policy_Button_Clicked"
+            Style="{StaticResource TextButton}"
+            Text="Politika privatnosti"
+            VerticalOptions="End" />
+    </Grid>
 </ContentPage>

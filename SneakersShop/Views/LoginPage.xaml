@@ -10,51 +10,62 @@
     BackgroundColor="White"
     Shell.NavBarIsVisible="False"
     Shell.TabBarIsVisible="False">
-    <VerticalStackLayout Spacing="20" VerticalOptions="Center">
-        <Label
-            FontAttributes="Bold"
-            FontSize="44"
-            HorizontalTextAlignment="Center"
-            Text="Prijava" />
-        <VerticalStackLayout Spacing="5">
-            <material:TextField
-                Title="Korisničko Ime"
-                Style="{StaticResource PrimaryTextField}"
-                Text="{Binding Username.Value}" />
+    <Grid>
+        <VerticalStackLayout Spacing="20" VerticalOptions="Center">
             <Label
-                IsVisible="{Binding Username.HasError}"
-                Style="{StaticResource ErrorLabel}"
-                Text="{Binding Username.Error}" />
-        </VerticalStackLayout>
+                FontAttributes="Bold"
+                FontSize="44"
+                HorizontalTextAlignment="Center"
+                Text="Prijava" />
+            <VerticalStackLayout Spacing="5">
+                <material:TextField
+                    Title="Korisničko Ime"
+                    Style="{StaticResource PrimaryTextField}"
+                    Text="{Binding Username.Value}" />
+                <Label
+                    IsVisible="{Binding Username.HasError}"
+                    Style="{StaticResource ErrorLabel}"
+                    Text="{Binding Username.Error}" />
+            </VerticalStackLayout>
 
-        <VerticalStackLayout Spacing="5">
-            <material:TextField
-                Title="Lozinka"
-                IsPassword="True"
-                Style="{StaticResource PrimaryTextField}"
-                Text="{Binding Password.Value}">
-                <material:TextField.Attachments>
-                    <material:TextFieldPasswordShowHideAttachment />
-                </material:TextField.Attachments>
-            </material:TextField>
-            <Label
-                IsVisible="{Binding Password.HasError}"
-                Style="{StaticResource ErrorLabel}"
-                Text="{Binding Password.Error}" />
+            <VerticalStackLayout Spacing="5">
+                <material:TextField
+                    Title="Lozinka"
+                    IsPassword="True"
+                    Style="{StaticResource PrimaryTextField}"
+                    Text="{Binding Password.Value}">
+                    <material:TextField.Attachments>
+                        <material:TextFieldPasswordShowHideAttachment />
+                    </material:TextField.Attachments>
+                </material:TextField>
+                <Label
+                    IsVisible="{Binding Password.HasError}"
+                    Style="{StaticResource ErrorLabel}"
+                    Text="{Binding Password.Error}" />
+            </VerticalStackLayout>
+            <Button
+                Command="{Binding LoginCommand}"
+                FontAttributes="Bold"
+                IsEnabled="{Binding IsLoginButtonEnabled}"
+                Style="{StaticResource PrimaryButton}"
+                StyleClass="ElevatedButton"
+                Text="Prijavi se" />
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                <Label Text="Još nemate nalog?" VerticalOptions="Center" />
+                <Button
+                    Clicked="Register_Button_Clicked"
+                    Style="{StaticResource TextButton}"
+                    Text="Registruj se" />
+            </HorizontalStackLayout>
+            <Button
+                Clicked="Skip_Button_Clicked"
+                Style="{StaticResource TextButton}"
+                Text="Ipak preskoči" />
         </VerticalStackLayout>
         <Button
-            Command="{Binding LoginCommand}"
-            FontAttributes="Bold"
-            IsEnabled="{Binding IsLoginButtonEnabled}"
-            Style="{StaticResource PrimaryButton}"
-            StyleClass="ElevatedButton"
-            Text="Prijavi se" />
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-            <Label Text="Još nemate nalog?" VerticalOptions="Center" />
-            <Button
-                Clicked="Register_Button_Clicked"
-                Style="{StaticResource TextButton}"
-                Text="Registruj se" />
-        </HorizontalStackLayout>
-    </VerticalStackLayout>
+            Clicked="Privacy_Policy_Button_Clicked"
+            Style="{StaticResource TextButton}"
+            Text="Politika Privatnosti"
+            VerticalOptions="End" />
+    </Grid>
 </ContentPage>

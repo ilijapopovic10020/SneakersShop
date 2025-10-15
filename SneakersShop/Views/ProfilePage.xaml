@@ -102,24 +102,18 @@
             <VerticalStackLayout
                 Grid.Row="2"
                 IsVisible="{Binding IsUserLoggedIn, Converter={StaticResource InverseBooleanConverter}}"
+                Spacing="10"
                 VerticalOptions="Center">
                 <Label
-                    Margin="20,30"
                     FontSize="18"
                     HorizontalTextAlignment="Center"
                     Text="Niste prijavljeni. Prijavite se da biste pristupili svom profilu i porudžbinama."
                     TextColor="Gray" />
                 <Button
-                    BackgroundColor="{StaticResource Primary}"
                     Clicked="Login_Button_Clicked"
-                    CornerRadius="30"
-                    FontSize="20"
-                    HeightRequest="50"
+                    Style="{StaticResource PrimaryButton}"
                     StyleClass="ElevatedButton"
-                    Text="Prijavi se"
-                    TextColor="White"
-                    TextTransform="Uppercase"
-                    WidthRequest="350" />
+                    Text="Prijavi se" />
             </VerticalStackLayout>
         </Grid>
     </VerticalStackLayout>

@@ -1,5 +1,4 @@
 using SneakersShop.ViewModels;
-using System.Threading.Tasks;
 
 namespace SneakersShop.Views;
 
@@ -20,8 +19,8 @@ public partial class CartPage : ContentPage
         await _vm.LoadCartItemsCommand.ExecuteAsync(null);
     }
 
-    private void Checkout_Button_Clicked(object sender, EventArgs e)
+    private async void Login_Button_Clicked(object sender, EventArgs e)
     {
-
+        await Shell.Current.GoToAsync($"{nameof(LoginPage)}");
     }
 }
