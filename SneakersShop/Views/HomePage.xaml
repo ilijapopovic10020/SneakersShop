@@ -9,7 +9,8 @@
     xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
     Padding="8,16"
     x:DataType="viewmodel:HomeViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.NavBarIsVisible="False">
     <ScrollView>
         <VerticalStackLayout VerticalOptions="Center">
@@ -28,27 +29,29 @@
                             HeightRequest="34"
                             Style="{StaticResource PrimaryButton}"
                             Text="Pretraži"
+                            TextColor="{AppThemeBinding Light=White,
+                                                        Dark=Black}"
                             WidthRequest="105" />
                     </material:TextField.Attachments>
                 </material:TextField>
                 <Border
-                    HeightRequest="200"
+                    HeightRequest="250"
                     StrokeShape="RoundRectangle 30"
                     StrokeThickness="0">
                     <Grid>
                         <Image Aspect="AspectFill" Source="banner.png" />
-                        <BoxView BackgroundColor="Black" Opacity="0.4" />
+                        <BoxView BackgroundColor="Black" Opacity="0.3" />
                         <VerticalStackLayout Margin="10" VerticalOptions="End">
                             <Label
                                 FontAttributes="Bold"
                                 FontSize="34"
-                                Opacity="0.5"
+                                Opacity="0.7"
                                 Text="Istraži našu"
                                 TextColor="White" />
                             <Label
                                 FontAttributes="Bold"
                                 FontSize="34"
-                                Opacity="0.5"
+                                Opacity="0.7"
                                 Text="najnoviju kolekciju"
                                 TextColor="White" />
                         </VerticalStackLayout>
@@ -58,16 +61,19 @@
                 <ScrollView HorizontalScrollBarVisibility="Never" Orientation="Horizontal">
                     <CollectionView ItemsSource="{Binding Brands}">
                         <CollectionView.ItemsLayout>
-                            <LinearItemsLayout ItemSpacing="10" Orientation="Horizontal" />
+                            <LinearItemsLayout ItemSpacing="15" Orientation="Horizontal" />
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:BrandsModel">
                                 <Button
+                                    Margin="5"
                                     Command="{Binding BrandSearchCommand, Source={RelativeSource AncestorType={x:Type viewmodel:HomeViewModel}}}"
                                     CommandParameter="{Binding}"
-                                    StyleClass="OutlinedButton"
+                                    Style="{StaticResource PrimaryButton}"
                                     Text="{Binding Name}"
-                                    TextColor="Black" />
+                                    TextColor="{AppThemeBinding Light=White,
+                                                                Dark=Black}"
+                                    WidthRequest="100" />
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -115,9 +121,11 @@
                                     Command="{Binding CategorySearchCommand, Source={RelativeSource AncestorType={x:Type viewmodel:HomeViewModel}}}"
                                     CommandParameter="{Binding}"
                                     FontSize="16"
-                                    StyleClass="OutlinedButton"
+                                    Style="{StaticResource PrimaryButton}"
                                     Text="{Binding Name}"
-                                    TextColor="Black" />
+                                    TextColor="{AppThemeBinding Light=White,
+                                                                Dark=Black}"
+                                    WidthRequest="100" />
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>

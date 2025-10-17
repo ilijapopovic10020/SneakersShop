@@ -8,7 +8,8 @@
     xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
     Title="Detalji Porudžbine"
     x:DataType="viewmodel:OrderViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.TabBarIsVisible="False">
     <Grid>
         <ActivityIndicator

@@ -25,6 +25,6 @@ public partial class LoginPage : ContentPage
 
     private async void Privacy_Policy_Button_Clicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync($"//{nameof(PolicyAndPrivacyPage)}");
+        await Shell.Current.GoToAsync(nameof(PolicyAndPrivacyPage));
     }
 }

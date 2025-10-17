@@ -71,6 +71,12 @@ namespace SneakersShop.Services.Implementations
 
         public async Task AddItem(CartModel cartItem)
         {
+            if(cartItems.Count == 0)
+            {
+                var serverItems = await GetCartItemsAsync();
+                LoadFromServer(serverItems);
+            }
+
             var existingItem = cartItems.FirstOrDefault(x =>
                 x.Product.Id == cartItem.Product.Id &&
                 x.Size.Id == cartItem.Size.Id);
@@ -84,7 +90,7 @@ namespace SneakersShop.Services.Implementations
                 cartItems.Add(cartItem);
             }
 
-            await UpsertAsync(cartItems.ToList());
+            await UpsertAsync([.. cartItems]);
         }
 
         public async Task RemoveItem(CartModel cartItem)

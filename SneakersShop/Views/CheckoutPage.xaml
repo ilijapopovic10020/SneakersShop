@@ -10,7 +10,7 @@
     Title="Završi porudžbinu"
     x:DataType="viewmodel:CheckoutViewModel"
     BackgroundColor="{AppThemeBinding Light={StaticResource White},
-                                      Dark={StaticResource Gray950}}"
+                                      Dark={StaticResource OffBlack}}"
     Shell.TabBarIsVisible="False">
     <Grid RowDefinitions="*, auto">
         <ScrollView Grid.Row="0">
@@ -96,7 +96,8 @@
                         <material:TextField
                             Title="Broj kartice"
                             Style="{StaticResource PrimaryTextField}"
-                            Text="{Binding CardNumber.Value}" />
+                            Text="{Binding CardNumber.Value}"
+                            TextChanged="CardNumber_TextChanged" />
                         <Label
                             IsVisible="{Binding CardNumber.HasError}"
                             Style="{StaticResource ErrorLabel}"

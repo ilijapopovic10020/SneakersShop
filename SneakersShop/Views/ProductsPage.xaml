@@ -9,7 +9,8 @@
     xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
     Padding="8,16"
     x:DataType="viewmodel:ProductsViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.NavBarIsVisible="False">
     <Grid RowDefinitions="auto, *" RowSpacing="20">
         <ActivityIndicator

@@ -98,7 +98,7 @@ namespace SneakersShop.ViewModels
                 var result = await FilePicker.Default.PickAsync(new PickOptions
                 {
                     FileTypes = FilePickerFileType.Images,
-                    PickerTitle = "Pick a brand image."
+                    PickerTitle = "Pick a profile image."
                 });
 
                 if (result == null)
@@ -149,7 +149,7 @@ namespace SneakersShop.ViewModels
                 if (result)
                 {
                     var popup = new MessagePopup("Uspešno", "Registracija je uspešno završena.");
-                    await App.Current.MainPage.ShowPopupAsync(popup);
+                    await Shell.Current.ShowPopupAsync(popup);
 
                     try
                     {
@@ -166,19 +166,41 @@ namespace SneakersShop.ViewModels
                         {
                             await SecureStorage.Default.SetAsync("user", JsonConvert.SerializeObject(authInfo));
 
-                            Application.Current.MainPage = new AppShell();
+                            if (Application.Current != null)
+                                Application.Current.MainPage = new AppShell();
+                            
                         }
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        var popupp = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                        await Shell.Current.ShowPopupAsync(popupp);
+                    }
+                    catch (HttpRequestException)
+                    {
+                        var popupp = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                        await Shell.Current.ShowPopupAsync(popupp);
                     }
                     catch
                     {
-                        await Application.Current.MainPage.Navigation.PopAsync();
+                        await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
                     }
                 }
+            }
+            catch (TaskCanceledException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (HttpRequestException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
             }
             catch (Exception ex)
             {
                 var popup = new MessagePopup("Greška", ex.Message);
-                await App.Current.MainPage.ShowPopupAsync(popup);
+                await Shell.Current.ShowPopupAsync(popup);
             }
         }
 

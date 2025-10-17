@@ -1,5 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SneakersShop.Components.Popups;
 using SneakersShop.Extensions;
 using SneakersShop.Models;
 using SneakersShop.Services.Interfaces;
@@ -38,6 +40,16 @@ namespace SneakersShop.ViewModels
                 User = await _userService.GetUserById(user.Id);
 
                 IsUserLoggedIn = true;
+            }
+            catch (TaskCanceledException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (HttpRequestException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
             }
             catch
             {

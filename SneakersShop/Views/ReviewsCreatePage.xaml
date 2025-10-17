@@ -7,10 +7,11 @@
     xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
     xmlns:model="clr-namespace:SneakersShop.Models"
     xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
-    Title="ReviewsCreatePage"
+    Title="Oceni proizvod"
     Padding="8,16"
     x:DataType="viewmodel:ReviewCreateViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.TabBarIsVisible="False">
     <VerticalStackLayout Spacing="15" VerticalOptions="Center">
         <Label

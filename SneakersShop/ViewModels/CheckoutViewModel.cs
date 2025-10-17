@@ -38,6 +38,8 @@ namespace SneakersShop.ViewModels
             Cvv.ValueChanged += (_) => Validator();
             Expiration.ValueChanged += (_) => Validator();
             Notes.ValueChanged += (_) => Validator();
+
+            //CardNumber.ValueChanged += OnCardNumberChanged;
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -86,6 +88,25 @@ namespace SneakersShop.ViewModels
         public BindableField<string?> Cvv { get; set; } = new();
         public BindableField<string?> CardNumber { get; set; } = new();
         public BindableField<string?> Expiration { get; set; } = new();
+
+        private void OnCardNumberChanged(object? _)
+        {
+            if(CardNumber.Value == null)
+                return;
+
+            var digitsOnly = new string([.. CardNumber.Value.Where(char.IsDigit)]);
+
+            if(digitsOnly.Length > 16)
+                digitsOnly = digitsOnly.Substring(0, 16);
+
+            var spaced = string.Join(" ", Enumerable.Range(0, digitsOnly.Length / 4 + (digitsOnly.Length % 4 == 0 ? 0 : 1))
+                   .Select(i => digitsOnly.Skip(i * 4).Take(4))
+                   .Where(g => g.Any())
+                   .Select(g => new string([.. g])));
+
+            if(CardNumber.Value != spaced)
+                CardNumber.Value = spaced;
+        }
 
         private void Validator()
         {
@@ -136,6 +157,16 @@ namespace SneakersShop.ViewModels
                 }
 
             }
+            catch (TaskCanceledException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (HttpRequestException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
             catch (Exception ex)
             {
                 var popup = new MessagePopup("Greška", ex.Message);
@@ -163,8 +194,6 @@ namespace SneakersShop.ViewModels
         [RelayCommand]
         private async Task CreateOrder()
         {
-            //Todo: ne radi porudžbina izbacuje null reference exception - šala?
-            //nije šala nešto je do servera nije dobar regex vrv jer sam stavio 4 i kaže da su samo visa i master card podržane ništa mi nije jasno
             try
             {
                 var order = new CreateOrderModel
@@ -197,6 +226,16 @@ namespace SneakersShop.ViewModels
                     var popup = new MessagePopup("Greška", "Došlo je do greške prilikom kreiranja porudžbine. Molimo pokušajte ponovo.");
                     await Shell.Current.ShowPopupAsync(popup);
                 }
+            }
+            catch (TaskCanceledException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (HttpRequestException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
             }
             catch (Exception ex)
             {

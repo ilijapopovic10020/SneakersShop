@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui;
 using SneakersShop.Components.Popups;
 using SneakersShop.Helpers;
 using SneakersShop.Models;
@@ -132,6 +131,16 @@ namespace SneakersShop.ViewModels
                 SelectedCategory = Categories.First();
                 SelectedCategory.IsSelected = true;
             }
+            catch (TaskCanceledException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (HttpRequestException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
             catch (Exception ex)
             {
                 var popup = new MessagePopup("Greška", ex.Message);
@@ -168,6 +177,16 @@ namespace SneakersShop.ViewModels
                 IsPageinationAvailable = TotalCount > 0;
                 IsNextPageAvailable = CurrentPage < PagesCount;
                 IsPreviousPageAvailable = CurrentPage > 1;
+            }
+            catch (TaskCanceledException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (HttpRequestException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
             }
             catch (Exception ex)
             {

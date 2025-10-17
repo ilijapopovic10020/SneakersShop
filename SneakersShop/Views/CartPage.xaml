@@ -8,7 +8,8 @@
     xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
     Padding="8,16"
     x:DataType="viewmodel:CartViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.NavBarIsVisible="False">
     <Grid>
         <ActivityIndicator
@@ -90,6 +91,15 @@
                                                 Grid.Column="1"
                                                 RowDefinitions="*,*,*"
                                                 RowSpacing="5">
+                                                <Button
+                                                    Command="{Binding RemoveCartItemCommand, Source={RelativeSource AncestorType={x:Type viewmodel:CartViewModel}}}"
+                                                    CommandParameter="{Binding Product.Id}"
+                                                    HorizontalOptions="End"
+                                                    Style="{StaticResource TextButton}"
+                                                    Text="Obriši"
+                                                    TextColor="Red"
+                                                    TextTransform="None"
+                                                    VerticalOptions="Start" />
                                                 <FlexLayout
                                                     Grid.Row="0"
                                                     VerticalOptions="End"
@@ -98,7 +108,7 @@
                                                         FontAttributes="Bold"
                                                         FontSize="16"
                                                         Text="{Binding Product.Brand, StringFormat='{0} '}"
-                                                        TextColor="{StaticResource Primary}" />
+                                                        TextColor="{StaticResource PrimaryDark}" />
                                                     <Label
                                                         FontAttributes="Bold"
                                                         FontSize="16"
@@ -115,13 +125,13 @@
                                                             FontSize="14"
                                                             IsVisible="{Binding Product.HasDiscount, Converter={StaticResource InverseBooleanConverter}}"
                                                             Text="{Binding Product.OldPrice, StringFormat='{}{0:N2} RSD'}"
-                                                            TextColor="{StaticResource Primary}" />
+                                                            TextColor="{StaticResource Tertiary}" />
                                                         <Label
                                                             FontAttributes="Bold"
                                                             FontSize="14"
                                                             IsVisible="{Binding Product.HasDiscount}"
                                                             Text="{Binding Product.NewPrice, StringFormat='{}{0:N2} RSD'}"
-                                                            TextColor="{StaticResource Primary}" />
+                                                            TextColor="{StaticResource Tertiary}" />
                                                     </VerticalStackLayout>
                                                     <HorizontalStackLayout Spacing="3">
                                                         <Label
@@ -141,6 +151,7 @@
                                                         <Label
                                                             FontSize="16"
                                                             Text="{Binding Size.Number}"
+                                                            TextColor="Black"
                                                             VerticalOptions="Center">
                                                             <Label.GestureRecognizers>
                                                                 <TapGestureRecognizer Command="{Binding SelectSizeCommand, Source={RelativeSource AncestorType={x:Type viewmodel:CartViewModel}}}" CommandParameter="{Binding}" />

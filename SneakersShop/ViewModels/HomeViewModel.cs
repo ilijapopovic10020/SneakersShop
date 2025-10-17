@@ -87,6 +87,16 @@ namespace SneakersShop.ViewModels
                 Brands = [.. brands];
                 Categories = [.. categories];
             }
+            catch (TaskCanceledException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (HttpRequestException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
             catch (Exception ex)
             {
                 var popup = new MessagePopup("Greška", ex.Message);
@@ -111,6 +121,16 @@ namespace SneakersShop.ViewModels
                     (int)FilterModel.Newest,
                     nameof(FilterModel.Newest)
                 );
+            }
+            catch (TaskCanceledException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (HttpRequestException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
             }
             catch (Exception ex)
             {

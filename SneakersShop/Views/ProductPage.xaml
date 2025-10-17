@@ -10,7 +10,8 @@
     xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
     Title="{Binding Product.Name}"
     x:DataType="viewmodel:ProductViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.TabBarIsVisible="False">
     <Grid>
         <ActivityIndicator
@@ -54,7 +55,7 @@
                                     <TapGestureRecognizer Command="{Binding AddOrRemoveFavoriteCommand}" />
                                 </Image.GestureRecognizers>
                                 <Image.Behaviors>
-                                    <mct:IconTintColorBehavior TintColor="{StaticResource Primary}" />
+                                    <mct:IconTintColorBehavior TintColor="{StaticResource PrimaryDark}" />
                                 </Image.Behaviors>
                             </Image>
                         </Border>
@@ -67,7 +68,7 @@
                             Source="{Binding PreviousImage}"
                             WidthRequest="75" />
                     </Border>
-                    <Border Stroke="{StaticResource Primary}" StrokeShape="RoundRectangle 20">
+                    <Border Stroke="{StaticResource Tertiary}" StrokeShape="RoundRectangle 20">
                         <Image
                             HeightRequest="75"
                             Source="{Binding CurrentImage}"
@@ -85,7 +86,8 @@
                         <Label
                             FontAttributes="Bold"
                             FontSize="28"
-                            Text="{Binding Product.Brand}" />
+                            Text="{Binding Product.Brand}"
+                            TextColor="{StaticResource PrimaryDark}" />
                         <Label FontSize="28" Text="{Binding Product.Name}" />
                     </VerticalStackLayout>
                     <Grid Margin="10,0">
@@ -341,8 +343,9 @@
         </ScrollView>
         <Border
             x:Name="InitialAddToCart"
-            Padding="0,20"
-            BackgroundColor="#f6f6f6"
+            Padding="0,30"
+            BackgroundColor="{AppThemeBinding Light=#f6f6f6,
+                                              Dark={StaticResource OffBlack}}"
             IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
             StrokeThickness="0"
             VerticalOptions="End">
@@ -363,7 +366,7 @@
         <Border
             x:Name="ScrolledAddToCart"
             Margin="10"
-            BackgroundColor="Black"
+            BackgroundColor="{StaticResource Primary}"
             HeightRequest="60"
             HorizontalOptions="End"
             IsVisible="False"
@@ -377,7 +380,7 @@
                 ColumnSpacing="10">
                 <Border
                     x:Name="addToCart"
-                    Background="{StaticResource Primary}"
+                    Background="White"
                     HeightRequest="40"
                     IsVisible="False"
                     StrokeShape="RoundRectangle 30"
@@ -385,7 +388,7 @@
                     <Label
                         HorizontalOptions="Center"
                         Text="Dodaj U Korpu"
-                        TextColor="White"
+                        TextColor="Black"
                         VerticalOptions="Center" />
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddToCartCommand}" />
@@ -394,7 +397,7 @@
                 <Border
                     x:Name="buyNow"
                     Grid.Column="1"
-                    Background="{StaticResource Primary}"
+                    Background="White"
                     HeightRequest="40"
                     IsVisible="False"
                     StrokeShape="RoundRectangle 30"
@@ -402,7 +405,7 @@
                     <Label
                         HorizontalOptions="Center"
                         Text="Kupi Odmah"
-                        TextColor="White"
+                        TextColor="Black"
                         VerticalOptions="Center" />
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding BuyNowCommand}" />

@@ -76,7 +76,7 @@ namespace SneakersShop.Models
         public Color TextColor =>
             HasDiscount
                 ? Microsoft.Maui.Graphics.Color.FromArgb("#ACACAC")
-                : Microsoft.Maui.Graphics.Color.FromArgb("#FF5500");
+                : Microsoft.Maui.Graphics.Color.FromArgb("#2471A3");
 
         partial void OnIsFavoriteChanged(bool value)
         {
@@ -90,6 +90,6 @@ namespace SneakersShop.Models
         public bool IsSelected { get; set; }
 
         public string FullImageUrl => $"{AppConstants.IMAGE_URL}{Image}";
-        public Color BorderColor => IsSelected ? Color.FromArgb("#FF5500") : Colors.Transparent;
+        public Color BorderColor => IsSelected ? Color.FromArgb("#89CFF0") : Colors.Transparent;
     }
 }

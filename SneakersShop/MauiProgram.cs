@@ -78,6 +78,10 @@ namespace SneakersShop
             {
                 client.BaseAddress = new Uri(AppConstants.API_URL);
             });
+            builder.Services.AddHttpClient<IPasswordUpdateService, PasswordUpdateService>(client =>
+            {
+                client.BaseAddress = new Uri(AppConstants.API_URL);
+            });
             #endregion
 
             #region ViewModels
@@ -99,6 +103,7 @@ namespace SneakersShop
             builder.Services.AddTransient<OrderViewModel>();
             builder.Services.AddTransient<CartViewModel>();
             builder.Services.AddTransient<CheckoutViewModel>();
+            builder.Services.AddTransient<PasswordUpdateViewModel>();
             #endregion
 
             #region Validators
@@ -106,6 +111,7 @@ namespace SneakersShop
             builder.Services.AddSingleton<IRegisterViewModelValidator, RegisterViewModelValidator>();
             builder.Services.AddSingleton<IUpdateUserViewModelValidator, UpdateUserViewModelValidator>();
             builder.Services.AddSingleton<ICheckoutViewModelValidator, CheckoutViewModelValidator>();
+            builder.Services.AddSingleton<IPasswordUpdateViewModelValidator, PasswordUpdateViewModelValidator>();
             #endregion
 
             #region Views

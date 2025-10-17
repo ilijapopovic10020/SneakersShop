@@ -6,7 +6,8 @@
     xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
     Padding="8,16"
     x:DataType="viewmodel:ProfileViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.NavBarIsVisible="False">
     <VerticalStackLayout VerticalOptions="Center">
         <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" />

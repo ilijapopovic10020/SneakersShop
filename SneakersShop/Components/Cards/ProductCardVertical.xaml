@@ -7,8 +7,9 @@
     <Border
         BackgroundColor="#f6f6f6"
         HeightRequest="300"
+        Stroke="#efefef"
         StrokeShape="RoundRectangle 20"
-        StrokeThickness="0"
+        StrokeThickness="01"
         WidthRequest="170">
         <Grid RowDefinitions="150, 60, 90">
             <Image
@@ -25,11 +26,13 @@
                     BindingContext="{x:Reference VerticalCard}"
                     FontAttributes="Bold"
                     FontSize="18"
-                    Text="{Binding Brand}" />
+                    Text="{Binding Brand}"
+                    TextColor="{StaticResource PrimaryDark}" />
                 <Label
                     BindingContext="{x:Reference VerticalCard}"
                     FontSize="18"
-                    Text="{Binding Name}" />
+                    Text="{Binding Name}"
+                    TextColor="{AppThemeBinding Dark=Black}" />
             </VerticalStackLayout>
             <Grid
                 Grid.Row="2"
@@ -43,9 +46,9 @@
                         BindingContext="{x:Reference VerticalCard}"
                         IsVisible="True"
                         Text="{Binding OldPrice, StringFormat='{}{0:N2} RSD'}"
-                        TextColor="{Binding TextColor}" />
+                        TextColor="{StaticResource Tertiary}" />
                     <BoxView
-                        BackgroundColor="{StaticResource Primary}"
+                        BackgroundColor="{StaticResource OffBlack}"
                         BindingContext="{x:Reference VerticalCard}"
                         HeightRequest="2"
                         HorizontalOptions="Start"
@@ -54,9 +57,10 @@
                     <Label
                         Grid.Row="1"
                         BindingContext="{x:Reference VerticalCard}"
+                        FontAttributes="Bold"
                         IsVisible="{Binding HasDiscount}"
                         Text="{Binding NewPrice, StringFormat='{}{0:N2} RSD'}"
-                        TextColor="{StaticResource Primary}" />
+                        TextColor="{StaticResource Tertiary}" />
                 </Grid>
                 <HorizontalStackLayout
                     Grid.Column="1"
@@ -64,7 +68,8 @@
                     VerticalOptions="Start">
                     <Label
                         BindingContext="{x:Reference VerticalCard}"
-                        Text="{Binding AvgRating, StringFormat='{}{0:N2}'}"
+                        Text="{Binding AvgRating, StringFormat='{}{0:N1}'}"
+                        TextColor="Black"
                         VerticalOptions="Center" />
                     <Image HeightRequest="15" Source="star_filled.png" />
                 </HorizontalStackLayout>

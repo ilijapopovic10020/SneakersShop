@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui;
 using SneakersShop.Components.Popups;
@@ -58,17 +59,35 @@ namespace SneakersShop.ViewModels
         [RelayCommand]
         private async Task LoadFilters()
         {
-            var allBrands = await _brandService.GetBrandsAsync();
-            Brands = new ObservableCollection<BrandsModel>(allBrands);
+            try
+            {
+                var allBrands = await _brandService.GetBrandsAsync();
+                Brands = [.. allBrands];
 
-            var allColors = await _colorService.GetColorsAsync();
-            Colors = new ObservableCollection<ColorsModel>(allColors);
+                var allColors = await _colorService.GetColorsAsync();
+                Colors = [.. allColors];
 
-            foreach (var brand in Brands)
-                brand.IsSelected = SelectedBrands.Contains(brand.Id);
+                foreach (var brand in Brands)
+                    brand.IsSelected = SelectedBrands.Contains(brand.Id);
 
-            foreach (var color in Colors)
-                color.IsSelected = SelectedColors.Contains(color.Name);
+                foreach (var color in Colors)
+                    color.IsSelected = SelectedColors.Contains(color.Name);
+            }
+            catch (TaskCanceledException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (HttpRequestException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (Exception ex)
+            {
+                var popup = new MessagePopup("Greška", ex.Message);
+                await Shell.Current.ShowPopupAsync(popup);
+            }
         }
 
         [RelayCommand]

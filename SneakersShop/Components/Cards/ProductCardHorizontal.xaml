@@ -17,7 +17,6 @@
                 BindingContext="{x:Reference HorizontalCard}"
                 Source="{Binding Image}"
                 TranslationY="15" />
-            <!--  Title  -->
             <Grid
                 Grid.Column="1"
                 RowDefinitions="auto,auto,auto"

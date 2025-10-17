@@ -10,7 +10,8 @@
     Title="Moje Porudžbine"
     Padding="8,16"
     x:DataType="viewmodel:OrdersViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.TabBarIsVisible="False">
     <Grid>
         <ActivityIndicator

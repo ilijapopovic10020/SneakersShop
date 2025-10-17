@@ -34,7 +34,7 @@ namespace SneakersShop.ViewModels
         private bool isLoading = false;
 
         [ObservableProperty]
-        private string street;
+        private string street = string.Empty;
 
         [RelayCommand]
         private async Task LoadCities()
@@ -45,6 +45,16 @@ namespace SneakersShop.ViewModels
 
                 var cities = await _cityService.GetCitiesAsync();
                 Cities = [.. cities];
+            }
+            catch (TaskCanceledException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (HttpRequestException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
             }
             catch (Exception ex)
             {
@@ -72,7 +82,7 @@ namespace SneakersShop.ViewModels
                     var addressModel = new CreateAddressModel
                     {
                         CityId = SelectedCity.Id,
-                        Street = street
+                        Street = Street
                     };
 
                     var result = await _addressService.CreateAddressAsync(addressModel);
@@ -89,6 +99,16 @@ namespace SneakersShop.ViewModels
                         await Shell.Current.ShowPopupAsync(popup);
                     }
                 }
+            }
+            catch (TaskCanceledException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
+            }
+            catch (HttpRequestException)
+            {
+                var popup = new MessagePopup("Greška", "Veza sa serverom je prekinuta. Proverite internet konekciju i pokušajte ponovo.");
+                await Shell.Current.ShowPopupAsync(popup);
             }
             catch (Exception ex)
             {

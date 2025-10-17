@@ -7,7 +7,8 @@
     xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
     Padding="16,32"
     x:DataType="viewmodel:AuthViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.NavBarIsVisible="False"
     Shell.TabBarIsVisible="False">
     <Grid>

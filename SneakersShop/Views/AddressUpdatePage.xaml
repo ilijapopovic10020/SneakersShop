@@ -9,7 +9,8 @@
     Title="Izmeni Adresu"
     Padding="8,16"
     x:DataType="viewmodel:AddressUpdateViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.NavBarIsVisible="True"
     Shell.TabBarIsVisible="False">
     <VerticalStackLayout Spacing="20" VerticalOptions="Center">

@@ -8,7 +8,8 @@
     Title="RegisterPage"
     Padding="16,32"
     x:DataType="viewmodel:RegisterViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.TabBarIsVisible="False">
     <Grid>
         <VerticalStackLayout Spacing="20" VerticalOptions="Center">

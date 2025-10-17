@@ -8,7 +8,8 @@
     xmlns:viewmodel="clr-namespace:SneakersShop.ViewModels"
     Title="Izmeni nalog"
     x:DataType="viewmodel:ProfileUpdateViewModel"
-    BackgroundColor="White"
+    BackgroundColor="{AppThemeBinding Light=White,
+                                      Dark={StaticResource OffBlack}}"
     Shell.TabBarIsVisible="False">
     <Grid>
         <VerticalStackLayout TranslationY="20" VerticalOptions="Center">
